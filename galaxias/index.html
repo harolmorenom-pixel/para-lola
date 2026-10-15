@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060716">
+<meta name="description" content="Galaxias y estrellas: un mapa del cielo para Lola">
+<title>Galaxias y estrellas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant:ital,wght@0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Same universe as "Para Lola": deep-space ink, moonlight text, starlight gold,
+   Caribbean-sea teal for interaction, a heart pink used only for Lola. */
+:root{
+  --space:#060716; --space-2:#0d1030; --ink:#141842;
+  --moon:#f2ead8; --moon-dim:#b9b3c9;
+  --star:#f4c96b; --sea:#49c6c9; --heart:#ff7d8f;
+  --line:rgba(242,234,216,.14);
+  --display:'Italiana',serif; --serif:'Cormorant',serif; --sans:'Jost',system-ui,sans-serif;
+  --gutter:clamp(16px,5vw,64px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--space);color:var(--moon);font:300 17px/1.6 var(--sans);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+a{color:var(--sea)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--sea);outline-offset:3px;border-radius:6px}
+[hidden]{display:none!important}
+
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main{position:relative;z-index:1}
+
+/* ---------- Hero: a live spiral galaxy is the one bold element ---------- */
+.hero{position:relative;min-height:100svh;display:grid;place-items:end center;text-align:center;padding:96px var(--gutter) clamp(84px,12vh,120px);overflow:hidden}
+#galaxyHero{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y}
+.hero-text{position:relative;pointer-events:none;max-width:760px}
+.hero h1{font:400 clamp(52px,10vw,128px)/.92 var(--display);letter-spacing:.01em;text-shadow:0 0 40px rgba(6,7,22,.9)}
+.hero p{font:italic 400 clamp(20px,3.2vw,28px)/1.35 var(--serif);color:var(--moon-dim);margin-top:18px;text-shadow:0 0 24px var(--space)}
+.hero .hint{position:absolute;bottom:28px;left:0;right:0;font-size:14px;color:var(--moon-dim);opacity:.8}
+
+/* ---------- Shared section frame ---------- */
+section.block{padding:clamp(72px,12vw,140px) var(--gutter);max-width:1180px;margin:0 auto}
+h2{font:400 clamp(38px,6vw,68px)/1.05 var(--display)}
+.lede{font:italic 400 clamp(19px,2.4vw,23px)/1.5 var(--serif);color:var(--moon-dim);max-width:62ch;margin-top:14px}
+
+/* ---------- Galaxy atlas ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:36px 0 28px}
+.filters button{padding:9px 16px;border-radius:999px;border:1px solid var(--line);font-size:15px;color:var(--moon-dim);transition:background .2s,color .2s,border-color .2s}
+.filters button[aria-pressed="true"]{background:var(--moon);color:var(--space);border-color:var(--moon)}
+.type-note{font:italic 400 19px/1.5 var(--serif);color:var(--moon);min-height:3em;max-width:64ch}
+.atlas{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:clamp(18px,3vw,34px);margin-top:28px}
+.gal{display:block;width:100%;text-align:left;border-radius:20px;padding:6px 6px 14px}
+.gal canvas{display:block;width:100%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,var(--space-2) 0,var(--space) 70%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.gal strong{display:block;font:500 22px/1.2 var(--serif);margin-top:12px;padding:0 6px}
+.gal span{display:block;font-size:14px;color:var(--moon-dim);padding:0 6px}
+@media (hover:hover){.gal:hover canvas{transform:scale(1.04) rotate(-4deg)}}
+.gal:active canvas{transform:scale(.97)}
+
+/* ---------- Modal ---------- */
+dialog{margin:auto;border:1px solid var(--line);border-radius:24px;background:linear-gradient(160deg,#10143a,#070820 70%);color:var(--moon);width:min(680px,calc(100% - 24px));max-height:calc(100svh - 24px);padding:0;overflow:auto;box-shadow:0 40px 120px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(3,4,14,.72);backdrop-filter:blur(4px)}
+dialog[open]{animation:pop .32s cubic-bezier(.2,.9,.25,1.05)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.m-head{display:grid;grid-template-columns:132px 1fr;gap:20px;align-items:center;padding:26px 26px 6px}
+.m-head canvas{width:132px;height:132px;border-radius:50%}
+.m-type{font-size:14px;color:var(--sea)}
+.m-head h3{font:400 clamp(30px,6vw,44px)/1.05 var(--display);margin-top:2px}
+.m-close{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);font-size:22px;line-height:1;display:grid;place-items:center}
+.m-body{padding:10px 26px 28px}
+.m-body h4{font:500 21px/1.3 var(--serif);margin:22px 0 10px}
+.facts{list-style:none;display:grid;gap:12px}
+.facts li{position:relative;padding-left:24px;font-size:16px;line-height:1.55}
+.facts li::before{content:"✦";position:absolute;left:0;top:0;color:var(--star);font-size:13px}
+.dist-num{font:400 clamp(34px,7vw,48px)/1 var(--display);color:var(--star)}
+.dist-num small{font:300 16px var(--sans);color:var(--moon-dim);margin-left:6px}
+.bar{position:relative;height:14px;border-radius:999px;background:rgba(242,234,216,.08);margin:18px 0 8px;overflow:visible}
+.bar-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--sea),var(--star));box-shadow:0 0 18px rgba(244,201,107,.45);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.bar-tick{position:absolute;top:-6px;width:1px;height:26px;background:var(--line)}
+.bar-labels{position:relative;height:38px;font-size:12px;color:var(--moon-dim)}
+.bar-labels span{position:absolute;transform:translateX(-50%);white-space:nowrap;text-align:center;line-height:1.25}
+.bar-labels span:first-child{transform:none}
+.bar-labels span:last-child{transform:translateX(-100%);text-align:right}
+.m-light{font:italic 400 18px/1.5 var(--serif);color:var(--moon-dim);margin-top:10px}
+
+/* ---------- Star life cycle (a real sequence, so it is numbered) ---------- */
+.mass{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;margin:34px 0 0}
+.mass button{padding:9px 18px;border-radius:999px;font-size:15px;color:var(--moon-dim)}
+.mass button[aria-pressed="true"]{background:var(--star);color:var(--space)}
+.cycle{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(24px,5vw,64px);align-items:center;margin-top:34px}
+.stage-view{position:relative;aspect-ratio:1;max-width:460px;width:100%;margin:0 auto}
+#starCanvas{width:100%;height:100%}
+.steps{list-style:none;counter-reset:s;display:grid;gap:4px}
+.steps button{display:grid;grid-template-columns:34px 1fr;gap:12px;width:100%;text-align:left;padding:12px 14px;border-radius:14px;color:var(--moon-dim);transition:background .2s,color .2s}
+.steps button::before{counter-increment:s;content:counter(s);font:400 22px/1 var(--display);color:var(--moon-dim);padding-top:3px}
+.steps button[aria-current="step"]{background:rgba(242,234,216,.07);color:var(--moon)}
+.steps button[aria-current="step"]::before{color:var(--star)}
+.steps strong{display:block;font:500 20px/1.25 var(--serif)}
+.steps .desc{display:none;font-size:15px;line-height:1.55;margin-top:6px}
+.steps button[aria-current="step"] .desc{display:block}
+.step-nav{display:flex;gap:10px;margin-top:16px}
+.step-nav button{padding:10px 18px;border:1px solid var(--line);border-radius:999px;font-size:15px}
+.step-nav button:disabled{opacity:.35;cursor:default}
+
+/* ---------- Our sky (from the Para Lola journey) ---------- */
+.ours{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:clamp(18px,3vw,30px);margin-top:40px}
+.place{border-top:1px solid var(--line);padding-top:18px}
+.place b{display:block;font:400 30px/1.1 var(--display);color:var(--moon)}
+.place .ly{font-size:14px;color:var(--star);margin-top:4px}
+.place p{font-size:16px;color:var(--moon-dim);margin-top:10px}
+
+.finale{text-align:center;padding:clamp(90px,14vw,160px) var(--gutter) 120px}
+.finale h2{font-size:clamp(46px,9vw,104px)}
+.finale p{font:italic 400 clamp(20px,2.6vw,26px)/1.55 var(--serif);color:var(--moon-dim);max-width:34ch;margin:22px auto 0}
+.finale .sign{font:italic 500 22px var(--serif);color:var(--heart);margin-top:28px}
+.back{display:inline-block;margin-top:34px;padding:13px 26px;border-radius:999px;background:var(--moon);color:var(--space);text-decoration:none;font-weight:500}
+
+
+/* ---------- Quiz ---------- */
+.quiz{max-width:760px}
+.score{display:flex;align-items:baseline;gap:14px;margin-top:30px;flex-wrap:wrap}
+.score b{font:300 clamp(44px,8vw,64px)/1 var(--sans);color:var(--star)}
+.score span{color:var(--moon-dim);font-size:16px}
+.qbar{display:flex;gap:6px;margin-top:14px}
+.qbar i{flex:1;height:5px;border-radius:999px;background:rgba(242,234,216,.12);transition:background .3s}
+.qbar i.ok{background:var(--sea)} .qbar i.no{background:var(--heart)} .qbar i.now{background:var(--moon-dim)}
+.q{margin-top:30px}
+.q h3{font:500 clamp(23px,3.4vw,30px)/1.3 var(--serif)}
+.q-count{font-size:14px;color:var(--moon-dim);margin-bottom:6px}
+.answers{display:grid;gap:10px;margin-top:20px}
+.answers button{display:block;width:100%;text-align:left;padding:15px 18px;border:1px solid var(--line);border-radius:16px;font-size:17px;transition:background .2s,border-color .2s,transform .15s}
+@media (hover:hover){.answers button:not(:disabled):hover{border-color:var(--moon-dim);background:rgba(242,234,216,.04)}}
+.answers button:not(:disabled):active{transform:scale(.99)}
+.answers button.ok{border-color:var(--sea);background:rgba(73,198,201,.14)}
+.answers button.no{border-color:var(--heart);background:rgba(255,125,143,.12)}
+.answers button:disabled{cursor:default}
+.explain{margin-top:16px;font:italic 400 19px/1.5 var(--serif);color:var(--moon)}
+.q-next{margin-top:18px;padding:12px 24px;border-radius:999px;background:var(--moon);color:var(--space);font-weight:500}
+.q-end p{font:italic 400 clamp(21px,2.8vw,26px)/1.5 var(--serif);margin-top:26px}
+
+@media (max-width:760px){
+  .cycle{grid-template-columns:1fr}
+  .stage-view{max-width:300px}
+  .m-head{grid-template-columns:96px 1fr;gap:14px;padding:22px 18px 4px}
+  .m-head canvas{width:96px;height:96px}
+  .m-body{padding:6px 18px 24px}
+  .atlas{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gal strong{font-size:19px}
+  .bar-labels{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<main>
+  <header class="hero">
+    <canvas id="galaxyHero" aria-hidden="true"></canvas>
+    <div class="hero-text">
+      <h1>Galaxias y estrellas</h1>
+      <p>Un mapa del cielo para Lola, desde nuestra playa hasta las galaxias más lejanas.</p>
+    </div>
+    <p class="hint">Mueve el dedo o el ratón sobre la galaxia y baja para explorar</p>
+  </header>
+
+  <section class="block" id="galaxias" aria-labelledby="t-gal">
+    <h2 id="t-gal">Tipos de galaxias</h2>
+    <p class="lede">Cada galaxia es una ciudad de miles de millones de estrellas. Elige un tipo y toca una galaxia para ver sus secretos y lo lejos que está de nosotros.</p>
+    <div class="filters" role="group" aria-label="Filtrar por tipo">
+      <button type="button" data-f="todas" aria-pressed="true">Todas</button>
+      <button type="button" data-f="espiral" aria-pressed="false">Espirales</button>
+      <button type="button" data-f="eliptica" aria-pressed="false">Elípticas</button>
+      <button type="button" data-f="lenticular" aria-pressed="false">Lenticulares</button>
+      <button type="button" data-f="irregular" aria-pressed="false">Irregulares</button>
+      <button type="button" data-f="anillo" aria-pressed="false">Anillo</button>
+    </div>
+    <p class="type-note" id="typeNote" aria-live="polite"></p>
+    <ul class="atlas" id="atlas"></ul>
+  </section>
+
+  <section class="block" id="estrellas" aria-labelledby="t-star">
+    <h2 id="t-star">La vida de una estrella</h2>
+    <p class="lede">Todas nacen en una nube de gas y polvo. Cómo terminan depende de cuánta masa tienen al nacer.</p>
+    <div class="mass" role="group" aria-label="Masa de la estrella">
+      <button type="button" data-m="sol" aria-pressed="true">Como el Sol</button>
+      <button type="button" data-m="masiva" aria-pressed="false">Masiva (más de 8 soles)</button>
+    </div>
+    <div class="cycle">
+      <div class="stage-view"><canvas id="starCanvas" role="img" aria-label=""></canvas></div>
+      <div>
+        <ol class="steps" id="steps"></ol>
+        <div class="step-nav">
+          <button type="button" id="prevStep">Anterior</button>
+          <button type="button" id="nextStep">Siguiente</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="t-ours">
+    <h2 id="t-ours">Nuestro cielo</h2>
+    <p class="lede">Las paradas de nuestro viaje, puestas en el mismo mapa que las galaxias.</p>
+    <div class="ours">
+      <div class="place"><b>La Luna</b><div class="ly">1,3 segundos luz</div><p>La que mirábamos desde la orilla. Su luz tarda poco más de un segundo en llegar a tus ojos.</p></div>
+      <div class="place"><b>El Sol</b><div class="ly">8 minutos luz</div><p>Una estrella de tamaño mediano a mitad de su vida. Todavía le quedan unos 5.000 millones de años.</p></div>
+      <div class="place"><b>Constelación Lola</b><div class="ly">unos 640 años luz</div><p>La que inventamos con las estrellas que se ven desde Santa Marta. Esa luz salió antes de que existiera cualquiera de nosotros.</p></div>
+      <div class="place"><b>El centro de la Vía Láctea</b><div class="ly">26.000 años luz</div><p>Detrás del mar de Italia y del Caribe, la misma galaxia nos rodea a los dos.</p></div>
+    </div>
+  </section>
+
+  <section class="block quiz" id="quiz" aria-labelledby="t-quiz">
+    <h2 id="t-quiz">¿Cuánto aprendiste?</h2>
+    <p class="lede">Tres preguntas sobre lo que acabas de recorrer. Tu puntuación cambia con cada respuesta.</p>
+    <div class="score" aria-live="polite"><b id="qScore">0</b><span id="qScoreText">de 3 puntos</span></div>
+    <div class="qbar" id="qBar" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div id="qBox"></div>
+  </section>
+
+  <section class="finale" aria-labelledby="t-fin">
+    <h2 id="t-fin">Te amo, Lola</h2>
+    <p>Hay dos billones de galaxias en el universo observable, y de todas ellas, me quedo con la que hay en tu mirada.</p>
+    <p class="sign">Con todo mi amor, Harold</p>
+    <a class="back" href="/">Volver a nuestro álbum</a>
+  </section>
+</main>
+
+<dialog id="modal" aria-labelledby="mName">
+  <button class="m-close" type="button" id="mClose" aria-label="Cerrar">×</button>
+  <div class="m-head">
+    <canvas id="mCanvas" width="264" height="264" aria-hidden="true"></canvas>
+    <div><div class="m-type" id="mType"></div><h3 id="mName"></h3></div>
+  </div>
+  <div class="m-body">
+    <h4>Distancia desde la Tierra</h4>
+    <div class="dist-num"><span id="mDist">0</span><small>años luz</small></div>
+    <div class="bar" role="progressbar" id="mBar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="bar-fill" id="mFill"></div>
+    </div>
+    <div class="bar-labels" id="mLabels"></div>
+    <p class="m-light" id="mLight"></p>
+    <h4>Datos curiosos</h4>
+    <ul class="facts" id="mFacts"></ul>
+  </div>
+</dialog>
+
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = n => n.toLocaleString('es-CO');
+
+/* ---------- Background starfield: drifting particles that follow the pointer ----------
+   Each star has a depth d (0 far .. 1 near). Near stars drift faster, shift more with
+   the pointer (parallax) and get nudged away when the pointer passes close by. */
+(() => {
+  const c = document.getElementById('sky'), x = c.getContext('2d');
+  let stars = [], w, h, dpr;
+  const ptr = {x:.5, y:.5, tx:.5, ty:.5, px:-1e4, py:-1e4};
+  function size(){
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = c.width = innerWidth * dpr; h = c.height = innerHeight * dpr;
+    const n = Math.round(innerWidth * innerHeight / 3200);
+    stars = Array.from({length:n}, () => ({x:Math.random()*w, y:Math.random()*h, ox:0, oy:0, r:(Math.random()*1.1+.2)*dpr, p:Math.random()*6.28, s:.4+Math.random()*1.4, d:Math.random()}));
+  }
+  addEventListener('pointermove', e => {
+    ptr.tx = e.clientX / innerWidth; ptr.ty = e.clientY / innerHeight;
+    ptr.px = e.clientX * dpr; ptr.py = e.clientY * dpr;
+  }, {passive:true});
+  addEventListener('pointerleave', () => { ptr.px = ptr.py = -1e4; });
+  let shoot = null;
+  function frame(t){
+    x.clearRect(0,0,w,h);
+    const off = scrollY * dpr * .05;
+    ptr.x += (ptr.tx - ptr.x) * .05; ptr.y += (ptr.ty - ptr.y) * .05;
+    const vx = (ptr.x - .5) * 1.2 * dpr, vy = .12 * dpr + (ptr.y - .5) * .6 * dpr;
+    const R = 110 * dpr;
+    for (const s of stars){
+      if (!reduce){
+        // drift: the field flows toward the pointer side, faster for near stars
+        s.x = (s.x + vx * (.2 + s.d) + w) % w;
+        s.y = (s.y + vy * (.2 + s.d) + h) % h;
+        // repel from the pointer, then ease back
+        const sx = s.x + s.ox, sy = (s.y - off*s.d + h) % h + s.oy;
+        const dx = sx - ptr.px, dy = sy - ptr.py, dd = Math.hypot(dx, dy);
+        if (dd < R && dd > 0){ const f = (1 - dd/R) * 2.2 * dpr * (.4 + s.d); s.ox += dx/dd*f; s.oy += dy/dd*f; }
+        s.ox *= .93; s.oy *= .93;
+      }
+      const a = .35 + .65 * (reduce ? .7 : (Math.sin(t/1000*s.s + s.p)*.5+.5));
+      x.globalAlpha = a; x.fillStyle = s.d > .92 ? '#f4c96b' : '#f2ead8';
+      const px = s.x + s.ox - (ptr.x - .5) * 40 * dpr * s.d;
+      const py = (s.y - off*s.d + h) % h + s.oy - (ptr.y - .5) * 30 * dpr * s.d;
+      x.beginPath(); x.arc(px, py, s.r * (1 + s.d*.5), 0, 6.28); x.fill();
+    }
+    if (!reduce){
+      if (!shoot && Math.random() < .004) shoot = {x:Math.random()*w*.8, y:Math.random()*h*.4, l:0};
+      if (shoot){
+        shoot.l += 14*dpr; const L = Math.min(shoot.l, 160*dpr);
+        const g = x.createLinearGradient(shoot.x+shoot.l, shoot.y+shoot.l*.45, shoot.x+shoot.l-L, shoot.y+(shoot.l-L)*.45);
+        g.addColorStop(0,'rgba(242,234,216,.9)'); g.addColorStop(1,'rgba(242,234,216,0)');
+        x.globalAlpha = 1; x.strokeStyle = g; x.lineWidth = 1.4*dpr;
+        x.beginPath(); x.moveTo(shoot.x+shoot.l, shoot.y+shoot.l*.45); x.lineTo(shoot.x+shoot.l-L, shoot.y+(shoot.l-L)*.45); x.stroke();
+        if (shoot.l > w*.5) shoot = null;
+      }
+    }
+    x.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', size); size(); requestAnimationFrame(frame);
+})();
+
+/* ---------- Procedural galaxy renderer (used by hero, atlas and modal) ---------- */
+function seeded(seed){ let s = seed; return () => (s = (s*16807) % 2147483647) / 2147483647; }
+function makeGalaxy(type, seed, count){
+  const rnd = seeded(seed), pts = [];
+  const gauss = () => (rnd()+rnd()+rnd()-1.5)/1.5;
+  for (let i=0;i<count;i++){
+    let r, a, z = 0, col;
+    if (type === 'espiral' || type === 'barrada'){
+      const arms = 2, arm = i % arms;
+      r = Math.pow(rnd(), .75);
+      a = arm*Math.PI + r*4.2 + gauss()*.55*(1-r*.3);
+      if (type === 'barrada' && r < .28){ a = arm*Math.PI + gauss()*.12; }
+      const k = rnd();
+      if (k < .2){ r = Math.abs(gauss())*.2; a = rnd()*6.28; }           // bulge
+      else if (k < .45){ r = Math.pow(rnd(), .7); a = rnd()*6.28; }      // faint disc between the arms
+      col = r < .2 ? '#f6d48a' : (rnd() < .3 ? '#9fdde0' : '#e9e3f5');
+    } else if (type === 'eliptica'){
+      r = Math.abs(gauss())*.75; a = rnd()*6.28; col = r < .25 ? '#f8dca0' : '#f1c98a';
+    } else if (type === 'lenticular'){
+      r = rnd() < .5 ? Math.abs(gauss())*.35 : .25 + rnd()*.7; a = rnd()*6.28; z = .28;
+      col = r < .3 ? '#f8dca0' : '#e8dcc8';
+    } else if (type === 'anillo'){
+      if (rnd() < .2){ r = Math.abs(gauss())*.12; col = '#f6d48a'; }
+      else { r = .78 + gauss()*.07; col = rnd() < .5 ? '#9fdde0' : '#ff9fae'; }
+      a = rnd()*6.28;
+    } else { // irregular
+      const cx = gauss()*.62 + (rnd()<.3 ? .2 : 0), cy = gauss()*.42;
+      r = Math.hypot(cx,cy); a = Math.atan2(cy,cx);
+      col = rnd() < .4 ? '#9fdde0' : (rnd() < .2 ? '#ff9fae' : '#e9e3f5');
+    }
+    pts.push({r, a, s:rnd()*1.3+.3, b:(rnd()*.7+.3)*(col==='#e9e3f5' && r>.3 ? .7 : 1), col, flat:z});
+  }
+  return pts;
+}
+function drawGalaxy(ctx, pts, W, H, rot, tilt, scale, cyFrac){
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H*(cyFrac || .5), R = Math.min(W,H)*.46*(scale||1);
+  const glow = ctx.createRadialGradient(cx,cy,0,cx,cy,R*.5);
+  glow.addColorStop(0,'rgba(248,220,160,.55)'); glow.addColorStop(1,'rgba(248,220,160,0)');
+  ctx.fillStyle = glow; ctx.fillRect(0,0,W,H);
+  for (const p of pts){
+    const a = p.a + rot*(1.4 - p.r);
+    const px = cx + Math.cos(a)*p.r*R;
+    const py = cy + Math.sin(a)*p.r*R*(p.flat || tilt);
+    ctx.globalAlpha = p.b; ctx.fillStyle = p.col;
+    const ps = p.s*(.9 + Math.min(W,H)/700); ctx.fillRect(px, py, ps, ps);
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ---------- Hero galaxy: reacts to pointer ---------- */
+(() => {
+  const c = document.getElementById('galaxyHero'), x = c.getContext('2d');
+  const pts = makeGalaxy('espiral', 7, innerWidth < 700 ? 5000 : 9000);
+  let W, H, rot = 0, tilt = .42, tTilt = .42, spin = .0016;
+  function size(){ const d = Math.min(devicePixelRatio||1,2); W = c.width = c.offsetWidth*d; H = c.height = c.offsetHeight*d; }
+  c.addEventListener('pointermove', e => {
+    const r = c.getBoundingClientRect();
+    tTilt = .25 + .6*((e.clientY - r.top)/r.height);
+    spin = .0008 + .006*Math.abs((e.clientX - r.left)/r.width - .5);
+  });
+  c.addEventListener('pointerleave', () => { tTilt = .42; spin = .0016; });
+  function frame(){
+    if (!reduce){ rot += spin; tilt += (tTilt - tilt)*.05; }
+    drawGalaxy(x, pts, W, H, rot, tilt, innerWidth < 700 ? 1.1 : .9, innerWidth < 700 ? .4 : .42);
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', size); size(); frame();
+})();
+
+/* ---------- Galaxy data ---------- */
+const TYPES = {
+  todas:'De los dos billones de galaxias que se calcula que existen, cada una tiene una forma que cuenta su historia.',
+  espiral:'Discos que giran con brazos llenos de estrellas jóvenes y azules. Nuestra Vía Láctea es una espiral barrada.',
+  eliptica:'Bolas de estrellas viejas y doradas, casi sin gas para crear estrellas nuevas. Las más grandes del universo son elípticas.',
+  lenticular:'A medio camino entre espiral y elíptica: tienen disco, pero perdieron sus brazos y casi no forman estrellas.',
+  irregular:'Sin forma definida, a menudo deformadas por la gravedad de una vecina. Están llenas de gas y de estrellas recién nacidas.',
+  anillo:'Galaxias que recibieron el choque de otra más pequeña y quedaron con una onda de estrellas en forma de anillo.'
+};
+const LABEL = {espiral:'Galaxia espiral', barrada:'Espiral barrada', eliptica:'Galaxia elíptica', lenticular:'Galaxia lenticular', irregular:'Galaxia irregular', anillo:'Galaxia de anillo'};
+const GALAXIES = [
+  {id:'via', name:'Vía Láctea', draw:'barrada', f:'espiral', d:26000, dNote:'hasta su centro (estamos dentro de ella)', seed:11,
+   facts:['Tiene entre 100.000 y 400.000 millones de estrellas, y el Sol es solo una de ellas.','El Sol tarda unos 230 millones de años en dar una vuelta completa alrededor del centro.','En su centro hay un agujero negro, Sagitario A*, con la masa de unos 4 millones de soles.']},
+  {id:'lmc', name:'Gran Nube de Magallanes', draw:'irregular', f:'irregular', d:160000, seed:23,
+   facts:['Es una galaxia satélite que orbita alrededor de la Vía Láctea.','Desde Santa Marta asoma bajita sobre el horizonte sur en las noches más oscuras.','Allí explotó la supernova 1987A, la más cercana vista desde la invención del telescopio.']},
+  {id:'smc', name:'Pequeña Nube de Magallanes', draw:'irregular', f:'irregular', d:200000, seed:31,
+   facts:['Es la hermana menor de la Gran Nube y las dos están unidas por un puente de gas.','Se ve a simple vista desde el hemisferio sur como una mancha de nube que no se mueve.','Fernando de Magallanes la registró en su vuelta al mundo, en 1519, y por eso lleva su nombre.']},
+  {id:'and', name:'Andrómeda', draw:'espiral', f:'espiral', d:2500000, seed:5,
+   facts:['Es lo más lejano que puedes ver a simple vista: su luz salió hace 2,5 millones de años.','Tiene alrededor de un billón de estrellas, más del doble que la Vía Láctea.','Se acerca a nosotros y chocará con la Vía Láctea dentro de unos 4.500 millones de años.']},
+  {id:'tri', name:'Galaxia del Triángulo', draw:'espiral', f:'espiral', d:2730000, seed:41,
+   facts:['Es la tercera galaxia más grande de nuestro Grupo Local, después de Andrómeda y la Vía Láctea.','En cielos muy oscuros se puede ver sin telescopio, aunque cuesta encontrarla.','Contiene NGC 604, una de las fábricas de estrellas más grandes que conocemos.']},
+  {id:'cig', name:'Galaxia del Cigarro', draw:'irregular', f:'irregular', d:12000000, seed:57,
+   facts:['Forma estrellas unas diez veces más rápido que la Vía Láctea.','Ese ritmo frenético empezó por un encuentro cercano con su vecina, la galaxia de Bode.','Expulsa enormes chorros de gas rojo por arriba y por abajo de su disco.']},
+  {id:'rem', name:'Galaxia del Remolino', draw:'espiral', f:'espiral', d:23000000, seed:63,
+   facts:['Fue la primera galaxia en la que se vio forma de espiral, dibujada por Lord Rosse en 1845.','Tiene una galaxia compañera más pequeña enganchada al final de uno de sus brazos.','Con unos buenos binoculares se ve como una mancha suave en la constelación de los Lebreles.']},
+  {id:'som', name:'Galaxia del Sombrero', draw:'lenticular', f:'lenticular', d:29000000, seed:71,
+   facts:['Su bulbo brillante y su anillo de polvo oscuro le dan forma de sombrero.','La vemos casi de canto, por eso el disco parece una línea.','A su alrededor giran unos 2.000 cúmulos globulares, muchos más que en la Vía Láctea.']},
+  {id:'m87', name:'M87', draw:'eliptica', f:'eliptica', d:53500000, seed:83,
+   facts:['En 2019 su agujero negro central fue el primero en ser fotografiado.','Ese agujero negro tiene la masa de unos 6.500 millones de soles.','Lanza un chorro de partículas casi a la velocidad de la luz que mide unos 5.000 años luz.']},
+  {id:'rue', name:'Rueda de Carro', draw:'anillo', f:'anillo', d:500000000, seed:97,
+   facts:['Su forma de rueda nació cuando otra galaxia la atravesó de frente hace unos cientos de millones de años.','El telescopio James Webb la fotografió en 2022 con un detalle nunca visto.','El anillo exterior es una ola de estrellas recién nacidas que se sigue expandiendo.']}
+];
+
+/* ---------- Atlas ---------- */
+const atlas = document.getElementById('atlas'), cache = {};
+GALAXIES.forEach(g => {
+  const li = document.createElement('li');
+  li.dataset.f = g.f;
+  li.innerHTML = `<button class="gal" type="button" aria-haspopup="dialog"><canvas width="320" height="320" aria-hidden="true"></canvas><strong>${g.name}</strong><span>${LABEL[g.draw]}</span></button>`;
+  cache[g.id] = makeGalaxy(g.draw, g.seed, 2600);
+  const cv = li.querySelector('canvas');
+  drawGalaxy(cv.getContext('2d'), cache[g.id], 320, 320, g.seed, g.draw==='lenticular' ? .28 : .62, .95);
+  li.querySelector('button').addEventListener('click', () => openModal(g));
+  atlas.appendChild(li);
+});
+const note = document.getElementById('typeNote');
+note.textContent = TYPES.todas;
+document.querySelectorAll('.filters button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.filters button').forEach(o => o.setAttribute('aria-pressed', o === b));
+  const f = b.dataset.f; note.textContent = TYPES[f];
+  atlas.querySelectorAll('li').forEach(li => li.hidden = f !== 'todas' && li.dataset.f !== f);
+}));
+
+/* ---------- Modal with log-scale distance bar ---------- */
+const modal = document.getElementById('modal');
+const MIN = 3, MAX = 9;  // 10^3 to 10^9 light-years
+const MARKS = [{v:640, t:'Constelación Lola'}, {v:26000, t:'Centro de la Vía Láctea'}, {v:2.5e6, t:'Andrómeda'}, {v:1e9, t:'1.000 millones'}];
+const pct = v => Math.max(0, Math.min(100, (Math.log10(v) - MIN) / (MAX - MIN) * 100));
+let spinRaf;
+function openModal(g){
+  document.getElementById('mType').textContent = LABEL[g.draw];
+  document.getElementById('mName').textContent = g.name;
+  document.getElementById('mFacts').innerHTML = g.facts.map(f => `<li>${f}</li>`).join('');
+  const years = g.d >= 1e6 ? `${fmt(g.d/1e6)} millones de años` : `${fmt(g.d)} años`;
+  document.getElementById('mLight').textContent = `${g.dNote ? 'Distancia ' + g.dNote + '. ' : ''}La luz que hoy vemos de ${g.name} salió hace ${years}.`;
+  const labels = document.getElementById('mLabels'), bar = document.getElementById('mBar');
+  bar.querySelectorAll('.bar-tick').forEach(t => t.remove());
+  labels.innerHTML = '';
+  [{v:1e3, t:'1.000'}, {v:1e6, t:'1 millón'}, {v:1e9, t:'1.000 millones'}].forEach(m => {
+    const s = document.createElement('span'); s.style.left = pct(m.v) + '%'; s.textContent = m.t; labels.appendChild(s);
+    const t = document.createElement('i'); t.className = 'bar-tick'; t.style.left = pct(m.v) + '%'; bar.appendChild(t);
+  });
+  bar.setAttribute('aria-valuenow', Math.round(pct(g.d)));
+  bar.setAttribute('aria-valuetext', `${fmt(g.d)} años luz`);
+  const fill = document.getElementById('mFill'), num = document.getElementById('mDist');
+  fill.style.transition = 'none'; fill.style.width = '0'; num.textContent = '0';
+  modal.showModal();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    fill.style.transition = ''; fill.style.width = pct(g.d) + '%';
+  }));
+  const t0 = performance.now(), dur = reduce ? 0 : 1400;
+  (function count(t){
+    const k = dur ? Math.min(1, (t - t0)/dur) : 1, e = 1 - Math.pow(1-k, 3);
+    num.textContent = fmt(Math.round(Math.pow(10, Math.log10(g.d)*e)));
+    if (k < 1) requestAnimationFrame(count);
+  })(t0);
+  const mc = document.getElementById('mCanvas'), mx = mc.getContext('2d');
+  const big = makeGalaxy(g.draw, g.seed, 4200); let r = g.seed;
+  cancelAnimationFrame(spinRaf);
+  (function spin(){
+    if (!reduce) r += .004;
+    drawGalaxy(mx, big, 264, 264, r, g.draw==='lenticular' ? .28 : .62, .95);
+    if (modal.open) spinRaf = requestAnimationFrame(spin);
+  })();
+}
+document.getElementById('mClose').addEventListener('click', () => modal.close());
+modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });
+
+/* ---------- Star life cycle ---------- */
+const CYCLES = {
+  sol:[
+    {n:'Nebulosa', d:'Una nube fría de gas y polvo empieza a encogerse por su propia gravedad.', c:'#7f8fd8', r:.42, neb:true},
+    {n:'Protoestrella', d:'El centro se calienta y brilla, envuelto todavía en un capullo de polvo.', c:'#ffb38a', r:.2, neb:.5},
+    {n:'Secuencia principal', d:'Se enciende la fusión de hidrógeno. Aquí pasa el 90% de su vida; el Sol lleva 4.600 millones de años en esta etapa.', c:'#f4c96b', r:.18},
+    {n:'Gigante roja', d:'Se le acaba el hidrógeno del centro y se hincha hasta tragarse a los planetas cercanos.', c:'#ff7b55', r:.4},
+    {n:'Nebulosa planetaria', d:'Suelta sus capas exteriores en un anillo de gas brillante que dura unos miles de años.', c:'#49c6c9', r:.38, ring:true},
+    {n:'Enana blanca', d:'Queda un núcleo del tamaño de la Tierra, tan denso que una cucharadita pesaría toneladas.', c:'#e8f2ff', r:.06}
+  ],
+  masiva:[
+    {n:'Nebulosa', d:'Una nube gigante de gas y polvo colapsa y forma un cúmulo de estrellas.', c:'#7f8fd8', r:.44, neb:true},
+    {n:'Protoestrella', d:'Acumula materia a gran velocidad y en poco tiempo supera ocho veces la masa del Sol.', c:'#ffc49e', r:.24, neb:.5},
+    {n:'Estrella azul', d:'Arde tan rápido que vive solo unos millones de años, miles de veces más brillante que el Sol.', c:'#9cc8ff', r:.22},
+    {n:'Supergigante roja', d:'Se hincha hasta un tamaño mayor que la órbita de Júpiter, como Betelgeuse en Orión.', c:'#ff6a48', r:.46},
+    {n:'Supernova', d:'Su núcleo colapsa en un segundo y explota; por unas semanas brilla más que toda su galaxia.', c:'#fff3d0', r:.48, burst:true},
+    {n:'Estrella de neutrones o agujero negro', d:'Queda una esfera de neutrones del tamaño de una ciudad o, si es muy masiva, un agujero negro.', c:'#2a2f66', r:.08, hole:true}
+  ]
+};
+let mass = 'sol', step = 0;
+const stepsEl = document.getElementById('steps');
+function renderSteps(){
+  stepsEl.innerHTML = '';
+  CYCLES[mass].forEach((s, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<button type="button"${i===step?' aria-current="step"':''}><span><strong>${s.n}</strong><span class="desc">${s.d}</span></span></button>`;
+    li.firstChild.addEventListener('click', () => { step = i; renderSteps(); });
+    stepsEl.appendChild(li);
+  });
+  document.getElementById('prevStep').disabled = step === 0;
+  document.getElementById('nextStep').disabled = step === CYCLES[mass].length - 1;
+  document.getElementById('starCanvas').setAttribute('aria-label', CYCLES[mass][step].n);
+}
+document.getElementById('prevStep').onclick = () => { step = Math.max(0, step-1); renderSteps(); };
+document.getElementById('nextStep').onclick = () => { step = Math.min(CYCLES[mass].length-1, step+1); renderSteps(); };
+document.querySelectorAll('.mass button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.mass button').forEach(o => o.setAttribute('aria-pressed', o === b));
+  mass = b.dataset.m; step = Math.min(step, CYCLES[mass].length-1); renderSteps();
+}));
+renderSteps();
+
+(() => {
+  const c = document.getElementById('starCanvas'), x = c.getContext('2d');
+  const dust = makeGalaxy('irregular', 3, 900);
+  let W, cur = {r:.4, c:[127,143,216]};
+  const hex = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+  function size(){ const d = Math.min(devicePixelRatio||1,2); W = c.width = c.height = c.offsetWidth*d; }
+  function frame(t){
+    const s = CYCLES[mass][step], tc = hex(s.c), k = reduce ? 1 : .06;
+    cur.r += (s.r - cur.r)*k; cur.c = cur.c.map((v,i) => v + (tc[i]-v)*k);
+    const [r,g,b] = cur.c.map(Math.round), C = W/2, R = cur.r*W*.5;
+    x.clearRect(0,0,W,W);
+    if (s.neb){
+      const alpha = s.neb === true ? 1 : s.neb;
+      for (const p of dust){
+        const a = p.a + t/9000; x.globalAlpha = p.b*.5*alpha;
+        x.fillStyle = p.col; x.fillRect(C + Math.cos(a)*p.r*W*.9, C + Math.sin(a)*p.r*W*.9, 2, 2);
+      }
+      x.globalAlpha = 1;
+    }
+    const pulse = reduce ? 1 : 1 + Math.sin(t/700)*.025;
+    if (s.ring){
+      x.lineWidth = W*.05; x.strokeStyle = `rgba(${r},${g},${b},.55)`;
+      x.beginPath(); x.arc(C, C, W*.3*pulse, 0, 6.28); x.stroke();
+      x.lineWidth = W*.015; x.strokeStyle = 'rgba(255,125,143,.5)';
+      x.beginPath(); x.arc(C, C, W*.36*pulse, 0, 6.28); x.stroke();
+      const g2 = x.createRadialGradient(C,C,0,C,C,W*.05); g2.addColorStop(0,'#fff'); g2.addColorStop(1,'rgba(255,255,255,0)');
+      x.fillStyle = g2; x.beginPath(); x.arc(C,C,W*.05,0,6.28); x.fill();
+    } else if (s.hole){
+      const g3 = x.createRadialGradient(C,C,R*.6,C,C,R*3.2);
+      g3.addColorStop(0,'rgba(244,201,107,.9)'); g3.addColorStop(.35,'rgba(255,123,85,.35)'); g3.addColorStop(1,'rgba(255,123,85,0)');
+      x.fillStyle = g3; x.beginPath(); x.arc(C,C,R*3.2,0,6.28); x.fill();
+      x.fillStyle = '#000'; x.beginPath(); x.arc(C,C,R*1.1,0,6.28); x.fill();
+    } else {
+      const R2 = R*pulse*(s.burst ? 1 + (reduce ? 0 : Math.sin(t/220)*.06) : 1);
+      const halo = x.createRadialGradient(C,C,R2*.2,C,C,R2*(s.burst ? 2.2 : 1.7));
+      halo.addColorStop(0,`rgba(${r},${g},${b},.95)`); halo.addColorStop(.45,`rgba(${r},${g},${b},.35)`); halo.addColorStop(1,`rgba(${r},${g},${b},0)`);
+      x.fillStyle = halo; x.beginPath(); x.arc(C,C,R2*(s.burst ? 2.2 : 1.7),0,6.28); x.fill();
+      const core = x.createRadialGradient(C - R2*.25, C - R2*.25, 0, C, C, R2);
+      core.addColorStop(0,'#fffaf0'); core.addColorStop(1,`rgb(${r},${g},${b})`);
+      x.fillStyle = core; x.beginPath(); x.arc(C,C,R2,0,6.28); x.fill();
+      if (s.burst && !reduce){
+        x.strokeStyle = 'rgba(255,243,208,.6)'; x.lineWidth = 2;
+        for (let i=0;i<24;i++){ const a = i/24*6.28 + t/3000, L = R2*(1.3 + (Math.sin(t/180+i)*.5+.5)*.9);
+          x.beginPath(); x.moveTo(C+Math.cos(a)*R2*1.05, C+Math.sin(a)*R2*1.05); x.lineTo(C+Math.cos(a)*L, C+Math.sin(a)*L); x.stroke(); }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', size); size(); requestAnimationFrame(frame);
+})();
+/* ---------- Quiz ---------- */
+const QUIZ = [
+  {q:'¿Cuál es la galaxia más lejana que puedes ver a simple vista?', a:['La Gran Nube de Magallanes','Andrómeda','La galaxia del Sombrero'], ok:1,
+   why:'Andrómeda está a 2,5 millones de años luz, y en una noche oscura se ve como una mancha suave.'},
+  {q:'¿En qué termina una estrella como el Sol?', a:['En un agujero negro','En una supernova','En una enana blanca'], ok:2,
+   why:'El Sol no tiene masa suficiente para explotar: se hará gigante roja y terminará como enana blanca.'},
+  {q:'¿Qué hay en el centro de la Vía Láctea?', a:['Un agujero negro de 4 millones de soles','Una estrella gigante azul','Nada, está vacío'], ok:0,
+   why:'Se llama Sagitario A*, y está a unos 26.000 años luz de nosotros.'}
+];
+let qi = 0, score = 0;
+const qBox = document.getElementById('qBox'), qTicks = [...document.querySelectorAll('#qBar i')];
+function setScore(){
+  document.getElementById('qScore').textContent = score;
+  
+}
+function showQ(){
+  const item = QUIZ[qi];
+  qTicks.forEach((t, i) => t.classList.toggle('now', i === qi && !t.classList.contains('ok') && !t.classList.contains('no')));
+  qBox.innerHTML = `<div class="q"><p class="q-count">Pregunta ${qi+1} de ${QUIZ.length}</p><h3>${item.q}</h3>
+    <div class="answers">${item.a.map((t, i) => `<button type="button" data-i="${i}">${t}</button>`).join('')}</div></div>`;
+  qBox.querySelectorAll('.answers button').forEach(b => b.addEventListener('click', () => answer(+b.dataset.i)));
+}
+function answer(i){
+  const item = QUIZ[qi], right = i === item.ok, btns = qBox.querySelectorAll('.answers button');
+  btns.forEach((b, j) => { b.disabled = true; if (j === item.ok) b.classList.add('ok'); else if (j === i) b.classList.add('no'); });
+  if (right) score++;
+  setScore();
+  qTicks[qi].classList.remove('now'); qTicks[qi].classList.add(right ? 'ok' : 'no');
+  const last = qi === QUIZ.length - 1;
+  qBox.querySelector('.q').insertAdjacentHTML('beforeend',
+    `<p class="explain">${right ? '¡Correcto!' : 'Casi.'} ${item.why}</p>
+     <button type="button" class="q-next">${last ? 'Ver resultado' : 'Siguiente pregunta'}</button>`);
+  const next = qBox.querySelector('.q-next');
+  next.focus({preventScroll:true});
+  next.addEventListener('click', () => { if (last) endQuiz(); else { qi++; showQ(); qBox.querySelector('.answers button').focus({preventScroll:true}); } });
+}
+function endQuiz(){
+  const msg = score === 3 ? 'Tres de tres. Ya conoces el cielo tan bien como yo te conozco a ti.'
+            : score === 2 ? 'Dos de tres. Muy bien; la próxima noche de estrellas te enseño la que falta.'
+            : 'El universo es enorme y tenemos toda la vida para recorrerlo juntos.';
+  qBox.innerHTML = `<div class="q-end"><p>${msg}</p><button type="button" class="q-next" id="qAgain">Jugar otra vez</button></div>`;
+  document.getElementById('qAgain').addEventListener('click', () => {
+    qi = 0; score = 0; setScore(); qTicks.forEach(t => t.className = ''); showQ();
+  });
+}
+setScore(); showQ();
+</script>
+</body>
+</html>
