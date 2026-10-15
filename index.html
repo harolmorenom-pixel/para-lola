@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#060716">
-<meta name="description" content="Para Lola: un viaje por nuestro universo, galaxia por galaxia, con nuestras fotos.">
-<title>Para Lola</title>
+<meta name="description" content="For Lola: a journey through our universe, galaxy by galaxy, with our photos.">
+<title>For Lola</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant:ital,wght@0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap">
@@ -106,7 +106,7 @@ dialog[open]{animation:pop .32s cubic-bezier(.2,.9,.25,1.05)}
 .ex-title .m-type{font-size:14px}
 .ex-title h3{font:400 clamp(30px,5.5vw,54px)/1 var(--display);text-shadow:0 0 18px var(--space)}
 .ex-poem{position:absolute;left:var(--gutter);bottom:calc(84px + env(safe-area-inset-bottom,0px));max-width:min(34ch,calc(100% - 2 * var(--gutter)));font:italic 400 clamp(18px,2.2vw,22px)/1.5 var(--serif);white-space:pre-line;text-shadow:0 0 14px var(--space),0 0 4px var(--space);pointer-events:none;transition:opacity .4s}
-.ex-poem::after{content:"Para Lola";display:block;margin-top:10px;font:400 14px var(--sans);color:var(--heart)}
+.ex-poem::after{content:"For Lola";display:block;margin-top:10px;font:400 14px var(--sans);color:var(--heart)}
 .ex-bottom{position:absolute;z-index:5;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px var(--gutter) calc(16px + env(safe-area-inset-bottom,0px))}
 .ex-hint{font-size:13px;color:var(--moon-dim)}
 .ex-actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -192,6 +192,10 @@ dialog[open]{animation:pop .32s cubic-bezier(.2,.9,.25,1.05)}
 .finale .links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:34px}
 
 @media (max-width:760px){
+  .ex-hint{display:none}
+  .ex-actions{flex-wrap:nowrap;width:100%;gap:6px}
+  .ex-actions .pill{flex:1 1 auto;padding:10px 8px;font-size:14px;text-align:center;white-space:nowrap}
+  .ex-bottom{flex-wrap:nowrap}
   .cycle{grid-template-columns:1fr}
   .stage-view{position:relative;top:0;max-width:280px}
   .m-head{grid-template-columns:96px 1fr;gap:14px;padding:22px 56px 4px 18px}
@@ -200,9 +204,19 @@ dialog[open]{animation:pop .32s cubic-bezier(.2,.9,.25,1.05)}
   .m-enter{padding-left:18px;padding-right:18px}
   .atlas{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gal strong{font-size:19px}
-  .ex-poem{bottom:calc(120px + env(safe-area-inset-bottom,0px));font-size:17px}
+  .ex-poem{bottom:calc(78px + env(safe-area-inset-bottom,0px));font-size:17px}
   .ex-hint{width:100%}
 }
+.explorer:not([hidden]){animation:exIn .5s ease-out}
+.explorer.leaving{animation:exOut 1.1s ease-in forwards}
+.explorer.leaving .ex-top, .explorer.leaving .ex-bottom, .explorer.leaving .ex-poem{opacity:0;transition:opacity .3s}
+@keyframes exIn{from{opacity:0}}
+@keyframes exOut{0%,75%{opacity:1}100%{opacity:0}}
+.gal .orb{transition:transform .38s cubic-bezier(.5,0,.75,0),opacity .38s,filter .38s}
+.gal.launch{z-index:5}
+.gal.launch .orb{transform:scale(2.4);opacity:0;filter:blur(2px)}
+.gal.land .orb{animation:land .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes land{from{transform:scale(2.4);opacity:0}}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -215,94 +229,90 @@ dialog[open]{animation:pop .32s cubic-bezier(.2,.9,.25,1.05)}
   <header class="hero">
     <canvas id="galaxyHero" aria-hidden="true"></canvas>
     <div class="hero-text">
-      <h1>Para Lola</h1>
-      <p>Un viaje por nuestro universo: diez galaxias, y en cada una, nuestros recuerdos.</p>
-      <a class="pill solid" href="#universo">Despegar ✦</a>
+      <h1>For Lola</h1>
+      <p>A journey through our universe: ten galaxies, and in each one, our memories.</p>
+      <a class="pill solid" href="#universo">Lift off ✦</a>
     </div>
   </header>
 
   <section class="block" id="universo" aria-labelledby="t-gal">
-    <h2 id="t-gal">Nuestro universo</h2>
-    <p class="lede">Cada galaxia guarda un pedazo de nuestra historia. Toca una para conocerla y luego entra a recorrerla: nuestras fotos brillan entre sus estrellas.</p>
-    <div class="filters" role="group" aria-label="Filtrar por tipo de galaxia">
-      <button type="button" data-f="todas" aria-pressed="true">Todas</button>
-      <button type="button" data-f="espiral" aria-pressed="false">Espirales</button>
-      <button type="button" data-f="eliptica" aria-pressed="false">Elípticas</button>
-      <button type="button" data-f="lenticular" aria-pressed="false">Lenticulares</button>
-      <button type="button" data-f="irregular" aria-pressed="false">Irregulares</button>
-      <button type="button" data-f="anillo" aria-pressed="false">Anillo</button>
+    <h2 id="t-gal">Our universe</h2>
+    <p class="lede">Every galaxy keeps a piece of our story. Tap one to fly inside it: our photos shine among its stars.</p>
+    <div class="filters" role="group" aria-label="Filter by galaxy type">
+      <button type="button" data-f="todas" aria-pressed="true">All</button>
+      <button type="button" data-f="espiral" aria-pressed="false">Spirals</button>
+      <button type="button" data-f="eliptica" aria-pressed="false">Ellipticals</button>
+      <button type="button" data-f="lenticular" aria-pressed="false">Lenticulars</button>
+      <button type="button" data-f="irregular" aria-pressed="false">Irregulars</button>
+      <button type="button" data-f="anillo" aria-pressed="false">Ring</button>
     </div>
     <p class="type-note" id="typeNote" aria-live="polite"></p>
     <ul class="atlas" id="atlas"></ul>
   </section>
 
   <section class="block" id="estrellas" aria-labelledby="t-star">
-    <h2 id="t-star">La vida de una estrella</h2>
-    <p class="lede">Todas nacen en una nube de gas y polvo, y cómo terminan depende de su masa. En cada etapa te dejo una razón por la que te amo.</p>
-    <div class="mass" role="group" aria-label="Masa de la estrella">
-      <button type="button" data-m="sol" aria-pressed="true">Como el Sol</button>
-      <button type="button" data-m="masiva" aria-pressed="false">Masiva (más de 8 soles)</button>
+    <h2 id="t-star">The life of a star</h2>
+    <p class="lede">Every star is born in a cloud of gas and dust, and how it ends depends on its mass. At each stage I leave you a reason why I love you.</p>
+    <div class="mass" role="group" aria-label="Star mass">
+      <button type="button" data-m="sol" aria-pressed="true">Like the Sun</button>
+      <button type="button" data-m="masiva" aria-pressed="false">Massive (over 8 suns)</button>
     </div>
     <div class="cycle">
       <div class="stage-view"><canvas id="starCanvas" role="img" aria-label=""></canvas></div>
       <div>
         <ol class="steps" id="steps"></ol>
         <div class="step-nav">
-          <button type="button" class="pill" id="prevStep">Anterior</button>
-          <button type="button" class="pill" id="nextStep">Siguiente</button>
+          <button type="button" class="pill" id="prevStep">Previous</button>
+          <button type="button" class="pill" id="nextStep">Next</button>
         </div>
       </div>
     </div>
   </section>
 
   <section class="block" aria-labelledby="t-ours">
-    <h2 id="t-ours">Nuestro cielo</h2>
-    <p class="lede">Las paradas de nuestro viaje, puestas en el mismo mapa que las galaxias.</p>
+    <h2 id="t-ours">Our sky</h2>
+    <p class="lede">The stops on our journey, placed on the same map as the galaxies.</p>
     <div class="ours">
-      <div class="place"><b>La Luna</b><div class="ly">1,3 segundos luz</div><p>La que mirábamos desde la orilla. Su luz tarda poco más de un segundo en llegar a tus ojos.</p></div>
-      <div class="place"><b>El Sol</b><div class="ly">8 minutos luz</div><p>Una estrella de tamaño mediano a mitad de su vida. Todavía le quedan unos 5.000 millones de años.</p></div>
-      <div class="place"><b>Constelación Lola</b><div class="ly">unos 640 años luz</div><p>La que inventamos con las estrellas que se ven desde Santa Marta. Esa luz salió antes de que existiera cualquiera de nosotros.</p></div>
-      <div class="place"><b>El centro de la Vía Láctea</b><div class="ly">26.000 años luz</div><p>Detrás del mar de Italia y del Caribe, la misma galaxia nos rodea a los dos.</p></div>
+      <div class="place"><b>The Moon</b><div class="ly">1.3 light-seconds</div><p>The one we watched from the shore. Its light takes just over a second to reach your eyes.</p></div>
+      <div class="place"><b>The Sun</b><div class="ly">8 light-minutes</div><p>A medium-sized star halfway through its life. It still has about 5 billion years left.</p></div>
+      <div class="place"><b>The Lola constellation</b><div class="ly">about 640 light-years</div><p>The one we made up from the stars you can see from Santa Marta. That light left before either of us existed.</p></div>
+      <div class="place"><b>The center of the Milky Way</b><div class="ly">26,000 light-years</div><p>Beyond the sea of Italy and the Caribbean, the same galaxy surrounds us both.</p></div>
     </div>
   </section>
 
   <section class="block quiz" id="quiz" aria-labelledby="t-quiz">
-    <h2 id="t-quiz">¿Cuánto aprendiste?</h2>
-    <p class="lede">Tres preguntas sobre lo que acabas de recorrer. Tu puntuación cambia con cada respuesta.</p>
-    <div class="score" aria-live="polite"><b id="qScore">0</b><span>de 3 puntos</span></div>
+    <h2 id="t-quiz">How much did you learn?</h2>
+    <p class="lede">Three questions about what you just explored. Your score changes with every answer.</p>
+    <div class="score" aria-live="polite"><b id="qScore">0</b><span>out of 3 points</span></div>
     <div class="qbar" id="qBar" aria-hidden="true"><i></i><i></i><i></i></div>
     <div id="qBox"></div>
   </section>
 
   <section class="finale" aria-labelledby="t-fin">
-    <h2 id="t-fin">Te amo, Lola</h2>
-    <p>Hay dos billones de galaxias en el universo observable, y de todas ellas, me quedo con la que hay en tu mirada.</p>
-    <p class="sign">Con todo mi amor, Harold</p>
+    <h2 id="t-fin">I love you, Lola</h2>
+    <p>There are two trillion galaxies in the observable universe, and of all of them, I choose the one in your eyes.</p>
+    <p class="sign">With all my love, Harold</p>
     <div class="links">
-      <a class="pill solid" href="#universo">Volver a las galaxias</a>
-      <a class="pill" href="album-viaje.html">Ver el álbum como viaje</a>
+      <a class="pill solid" href="#universo">Back to the galaxies</a>
+      <a class="pill" href="album-viaje.html">See the album as a journey</a>
     </div>
   </section>
 </main>
 
 <dialog id="modal" aria-labelledby="mName">
-  <button class="m-close" type="button" id="mClose" aria-label="Cerrar">×</button>
+  <button class="m-close" type="button" id="mClose" aria-label="Close">×</button>
   <div class="m-head">
     <canvas id="mCanvas" width="264" height="264" aria-hidden="true"></canvas>
     <div><div class="m-type" id="mType"></div><h3 id="mName"></h3></div>
   </div>
   <div class="m-body">
-    <h4>Distancia desde la Tierra</h4>
-    <div class="dist-num"><span id="mDist">0</span><small>años luz</small></div>
+    <h4>Distance from Earth</h4>
+    <div class="dist-num"><span id="mDist">0</span><small>light-years</small></div>
     <div class="bar" role="progressbar" id="mBar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar-fill" id="mFill"></div></div>
     <div class="bar-labels" id="mLabels"></div>
     <p class="m-light" id="mLight"></p>
-    <h4>Datos curiosos</h4>
+    <h4>Fun facts</h4>
     <ul class="facts" id="mFacts"></ul>
-  </div>
-  <div class="m-enter">
-    <button type="button" class="pill solid" id="mEnter">Entrar a la galaxia</button>
-    <span id="mCount"></span>
   </div>
 </dialog>
 
@@ -313,30 +323,31 @@ dialog[open]{animation:pop .32s cubic-bezier(.2,.9,.25,1.05)}
   <div class="ex-grid" id="exGrid" hidden><ul id="exGridList"></ul></div>
   <div class="ex-top">
     <div class="ex-title"><div class="m-type" id="exType"></div><h3 id="exName"></h3></div>
-    <button type="button" class="pill" id="exClose">Volver al universo</button>
+    <button type="button" class="pill" id="exClose">Back to the universe</button>
   </div>
   <div class="ex-bottom">
-    <p class="ex-hint" id="exHint">Arrastra para girar la galaxia, pellizca o usa la rueda para acercarte y toca una foto para verla.</p>
+    <p class="ex-hint" id="exHint">Drag to spin the galaxy, pinch or scroll to zoom, and tap a photo to see it up close.</p>
     <div class="ex-actions">
-      <button type="button" class="pill" id="exPoemToggle">Ocultar poema</button>
-      <button type="button" class="pill solid" id="exGridToggle">Ver como álbum</button>
+      <button type="button" class="pill" id="exFacts">Galaxy facts</button>
+      <button type="button" class="pill" id="exPoemToggle">Hide poem</button>
+      <button type="button" class="pill solid" id="exGridToggle">See as album</button>
     </div>
   </div>
 </div>
 
-<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto en grande">
-  <div class="lb-bar"><span id="lbPos">1 / 1</span><button class="pill" id="lbClose" type="button">Cerrar</button></div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo">
+  <div class="lb-bar"><span id="lbPos">1 / 1</span><button class="pill" id="lbClose" type="button">Close</button></div>
   <div class="lb-stage" id="lbStage">
-    <button class="lb-side prev" type="button" aria-label="Anterior" id="sidePrev"></button>
-    <button class="lb-side next" type="button" aria-label="Siguiente" id="sideNext"></button>
+    <button class="lb-side prev" type="button" aria-label="Previous" id="sidePrev"></button>
+    <button class="lb-side next" type="button" aria-label="Next" id="sideNext"></button>
   </div>
   <div class="lb-cap" id="lbCap"></div>
-  <div class="lb-nav"><button class="pill" id="lbPrev" type="button">Anterior</button><button class="pill" id="lbNext" type="button">Siguiente</button></div>
+  <div class="lb-nav"><button class="pill" id="lbPrev" type="button">Previous</button><button class="pill" id="lbNext" type="button">Next</button></div>
 </div>
 
 <script>
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const fmt = n => n.toLocaleString('es-CO');
+const fmt = n => n.toLocaleString('en-US');
 const small = () => innerWidth < 700;
 
 /* ---------- Background starfield: drifting particles that follow the pointer ---------- */
@@ -422,7 +433,7 @@ function makeGalaxy(type, seed, count){
 }
 // rot spins inner stars faster (differential rotation); tilt squashes the disc.
 function project(p, view){
-  const a = p.a + view.rot*(1.4 - p.r), t = p.flat ? p.flat*view.tilt : view.tilt;
+  const a = p.a + view.rot*(p.rigid ? .9 : 1.4 - p.r), t = p.flat ? p.flat*view.tilt : view.tilt;
   return [view.cx + Math.cos(a)*p.r*view.R, view.cy + Math.sin(a)*p.r*view.R*t, Math.sin(a)];
 }
 function drawGalaxy(ctx, pts, W, H, rot, tilt, scale, cyFrac){
@@ -467,64 +478,64 @@ function paintGalaxy(ctx, pts, view, base){
 
 /* ---------- Content ---------- */
 const TYPES = {
-  todas:'De los dos billones de galaxias que se calcula que existen, estas diez guardan nuestros recuerdos.',
-  espiral:'Discos que giran con brazos llenos de estrellas jóvenes y azules. Nuestra Vía Láctea es una espiral barrada.',
-  eliptica:'Bolas de estrellas viejas y doradas, casi sin gas para crear estrellas nuevas. Las más grandes del universo son elípticas.',
-  lenticular:'A medio camino entre espiral y elíptica: tienen disco, pero perdieron sus brazos y casi no forman estrellas.',
-  irregular:'Sin forma definida, a menudo deformadas por la gravedad de una vecina. Están llenas de gas y de estrellas recién nacidas.',
-  anillo:'Galaxias que recibieron el choque de otra más pequeña y quedaron con una onda de estrellas en forma de anillo.'
+  todas:'Of the roughly two trillion galaxies thought to exist, these ten hold our memories.',
+  espiral:'Spinning discs with arms full of young blue stars. Our Milky Way is a barred spiral.',
+  eliptica:'Balls of old golden stars with almost no gas left to make new ones. The largest galaxies in the universe are ellipticals.',
+  lenticular:'Halfway between spiral and elliptical: they have a disc, but lost their arms and barely form new stars.',
+  irregular:'No set shape, often pulled out of form by a neighbor\'s gravity. They are full of gas and newborn stars.',
+  anillo:'Galaxies that were hit by a smaller one passing through, leaving a wave of stars shaped like a ring.'
 };
-const LABEL = {espiral:'Galaxia espiral', barrada:'Espiral barrada', eliptica:'Galaxia elíptica', lenticular:'Galaxia lenticular', irregular:'Galaxia irregular', anillo:'Galaxia de anillo'};
+const LABEL = {espiral:'Spiral galaxy', barrada:'Barred spiral', eliptica:'Elliptical galaxy', lenticular:'Lenticular galaxy', irregular:'Irregular galaxy', anillo:'Ring galaxy'};
 const GALAXIES = [
-  {id:'via', name:'Vía Láctea', draw:'barrada', f:'espiral', d:26000, dNote:'hasta su centro (estamos dentro de ella)', seed:11,
-   poem:'Antes de ti, el cielo era un mapa sin nombres.\nLlegaste tú, Lola, y cada estrella\naprendió a decir tu nombre en voz baja.\nHoy despego contigo:\nno hay gravedad que me sostenga\ncuando me miras.',
-   facts:['Tiene entre 100.000 y 400.000 millones de estrellas, y el Sol es solo una de ellas.','El Sol tarda unos 230 millones de años en dar una vuelta completa alrededor del centro.','En su centro hay un agujero negro, Sagitario A*, con la masa de unos 4 millones de soles.']},
-  {id:'lmc', name:'Gran Nube de Magallanes', draw:'irregular', f:'irregular', d:160000, seed:23,
-   poem:'Donde la Sierra baja a besar el mar,\nel Caribe aprendió tu nombre en cada ola.\nQuiero atardeceres de Santa Marta contigo,\narena tibia, sal en los labios\ny tu mano diciendo: aquí, siempre aquí.',
-   facts:['Es una galaxia satélite que orbita alrededor de la Vía Láctea.','Desde Santa Marta asoma bajita sobre el horizonte sur en las noches más oscuras.','Allí explotó la supernova 1987A, la más cercana vista desde la invención del telescopio.']},
-  {id:'smc', name:'Pequeña Nube de Magallanes', draw:'irregular', f:'irregular', d:200000, seed:31,
-   poem:'La luna me pidió prestada tu risa\npara alumbrar la noche entera.\nLe dije que no:\nesa luz es mía cuando despierto\ny de nadie más cuando te abrazo.',
-   facts:['Es la hermana menor de la Gran Nube y las dos están unidas por un puente de gas.','Se ve a simple vista desde el hemisferio sur como una mancha de nube que no se mueve.','Fernando de Magallanes la registró en su vuelta al mundo, en 1519, y por eso lleva su nombre.']},
-  {id:'and', name:'Andrómeda', draw:'espiral', f:'espiral', d:2500000, seed:5,
-   poem:'El universo se expande cada segundo\ny aun así se queda pequeño\npara todo lo que siento por ti.\nLola, mi rincón favorito del cosmos\nes el espacio entre tu hombro y mi mejilla.',
-   facts:['Es lo más lejano que puedes ver a simple vista: su luz salió hace 2,5 millones de años.','Tiene alrededor de un billón de estrellas, más del doble que la Vía Láctea.','Se acerca a nosotros y chocará con la Vía Láctea dentro de unos 4.500 millones de años.']},
-  {id:'tri', name:'Galaxia del Triángulo', draw:'espiral', f:'espiral', d:2730000, seed:41,
-   poem:'Si unes las pecas de tus mejillas\naparece una constelación nueva.\nLa llamé Lola.\nLos astrónomos todavía no la conocen,\npero yo me la sé de memoria.',
-   facts:['Es la tercera galaxia más grande de nuestro Grupo Local, después de Andrómeda y la Vía Láctea.','En cielos muy oscuros se puede ver sin telescopio, aunque cuesta encontrarla.','Contiene NGC 604, una de las fábricas de estrellas más grandes que conocemos.']},
-  {id:'cig', name:'Galaxia del Cigarro', draw:'irregular', f:'irregular', d:12000000, seed:57,
-   poem:'Dicen que aquí nacen estrellas\ndiez veces más rápido que en casa.\nNo les creo:\nyo he visto nacer cien\ncada vez que te ríes.',
-   facts:['Forma estrellas unas diez veces más rápido que la Vía Láctea.','Ese ritmo frenético empezó por un encuentro cercano con su vecina, la galaxia de Bode.','Expulsa enormes chorros de gas rojo por arriba y por abajo de su disco.']},
-  {id:'rem', name:'Galaxia del Remolino', draw:'espiral', f:'espiral', d:23000000, seed:63,
-   poem:'Hay una galaxia pequeña\nagarrada al brazo de otra más grande.\nAsí camino yo contigo:\nsin soltarte,\ndejando que tu luz me lleve.',
-   facts:['Fue la primera galaxia en la que se vio forma de espiral, dibujada por Lord Rosse en 1845.','Tiene una galaxia compañera más pequeña enganchada al final de uno de sus brazos.','Con unos buenos binoculares se ve como una mancha suave en la constelación de los Lebreles.']},
-  {id:'som', name:'Galaxia del Sombrero', draw:'lenticular', f:'lenticular', d:29000000, seed:71,
-   poem:'En Roma el helado se derretía más lento,\ncomo si el tiempo quisiera quedarse.\nEntre piedras antiguas y calles de colores\nentendí que lo eterno\nno estaba en los monumentos:\nestaba caminando a mi lado.',
-   facts:['Su bulbo brillante y su anillo de polvo oscuro le dan forma de sombrero.','La vemos casi de canto, por eso el disco parece una línea.','A su alrededor giran unos 2.000 cúmulos globulares, muchos más que en la Vía Láctea.']},
+  {id:'via', name:'Milky Way', draw:'barrada', f:'espiral', d:26000, dNote:'to its center (we live inside it)', seed:11,
+   poem:'Before you, the sky was a map with no names.\nThen you arrived, Lola, and every star\nlearned to whisper your name.\nToday I lift off with you:\nno gravity can hold me\nwhen you look at me.',
+   facts:['It has between 100 and 400 billion stars, and the Sun is just one of them.','The Sun takes about 230 million years to circle its center once.','At its center sits a black hole, Sagittarius A*, with the mass of about 4 million suns.']},
+  {id:'lmc', name:'Large Magellanic Cloud', draw:'irregular', f:'irregular', d:160000, seed:23,
+   poem:'Where the Sierra comes down to kiss the sea,\nthe Caribbean learned your name in every wave.\nI want Santa Marta sunsets with you,\nwarm sand, salt on our lips\nand your hand saying: here, always here.',
+   facts:['It is a satellite galaxy that orbits the Milky Way.','From Santa Marta it peeks out low over the southern horizon on the darkest nights.','Supernova 1987A exploded there, the closest one seen since the telescope was invented.']},
+  {id:'smc', name:'Small Magellanic Cloud', draw:'irregular', f:'irregular', d:200000, seed:31,
+   poem:'The moon asked to borrow your laugh\nto light up the whole night.\nI told her no:\nthat light is mine when I wake up\nand no one else\'s when I hold you.',
+   facts:['It is the Large Cloud\'s little sister, and the two are joined by a bridge of gas.','From the southern hemisphere you can see it with the naked eye, like a patch of cloud that never moves.','Magellan\'s crew recorded it on their voyage around the world in 1519, which is how it got its name.']},
+  {id:'and', name:'Andromeda', draw:'espiral', f:'espiral', d:2500000, seed:5,
+   poem:'The universe expands every second\nand still it is too small\nfor everything I feel for you.\nLola, my favorite corner of the cosmos\nis the space between your shoulder and my cheek.',
+   facts:['It is the farthest thing you can see with the naked eye: its light left 2.5 million years ago.','It has about a trillion stars, more than twice as many as the Milky Way.','It is heading toward us and will collide with the Milky Way in about 4.5 billion years.']},
+  {id:'tri', name:'Triangulum Galaxy', draw:'espiral', f:'espiral', d:2730000, seed:41,
+   poem:'If you connect the freckles on your cheeks\na new constellation appears.\nI named it Lola.\nAstronomers haven\'t found it yet,\nbut I know it by heart.',
+   facts:['It is the third largest galaxy in our Local Group, after Andromeda and the Milky Way.','Under very dark skies you can see it without a telescope, though it is hard to find.','It holds NGC 604, one of the biggest star factories we know of.']},
+  {id:'cig', name:'Cigar Galaxy', draw:'irregular', f:'irregular', d:12000000, seed:57,
+   poem:'They say stars are born here\nten times faster than at home.\nI don\'t believe them:\nI\'ve watched a hundred being born\nevery time you laugh.',
+   facts:['It forms stars about ten times faster than the Milky Way.','That frantic pace began with a close encounter with its neighbor, Bode\'s Galaxy.','It blows huge plumes of red gas out above and below its disc.']},
+  {id:'rem', name:'Whirlpool Galaxy', draw:'espiral', f:'espiral', d:23000000, seed:63,
+   poem:'There is a small galaxy\nholding on to the arm of a bigger one.\nThat\'s how I walk with you:\nnever letting go,\nletting your light carry me.',
+   facts:['It was the first galaxy seen to have a spiral shape, drawn by Lord Rosse in 1845.','A smaller companion galaxy is hooked onto the end of one of its arms.','With good binoculars it looks like a soft smudge in the constellation Canes Venatici.']},
+  {id:'som', name:'Sombrero Galaxy', draw:'lenticular', f:'lenticular', d:29000000, seed:71,
+   poem:'In Rome the gelato melted slower,\nas if time wanted to stay.\nAmong ancient stones and colorful streets\nI understood that forever\nwasn\'t in the monuments:\nit was walking beside me.',
+   facts:['Its bright bulge and dark ring of dust give it the shape of a hat.','We see it almost edge-on, so its disc looks like a line.','About 2,000 globular clusters orbit it, far more than around the Milky Way.']},
   {id:'m87', name:'M87', draw:'eliptica', f:'eliptica', d:53500000, seed:83,
-   poem:'Allí vive el primer agujero negro\nque alguien logró fotografiar.\nYo también tengo uno:\nel vacío que dejas cuando te vas,\nque se llena entero cuando vuelves.',
-   facts:['En 2019 su agujero negro central fue el primero en ser fotografiado.','Ese agujero negro tiene la masa de unos 6.500 millones de soles.','Lanza un chorro de partículas casi a la velocidad de la luz que mide unos 5.000 años luz.']},
-  {id:'rue', name:'Rueda de Carro', draw:'anillo', f:'anillo', d:500000000, seed:97,
-   poem:'Una galaxia chocó con otra\ny en vez de romperse\nse volvió un anillo de estrellas nuevas.\nAsí fue conocerte:\nun choque que me hizo brillar.',
-   facts:['Su forma de rueda nació cuando otra galaxia la atravesó de frente hace unos cientos de millones de años.','El telescopio James Webb la fotografió en 2022 con un detalle nunca visto.','El anillo exterior es una ola de estrellas recién nacidas que se sigue expandiendo.']}
+   poem:'This is home to the first black hole\nanyone ever photographed.\nI have one too:\nthe emptiness you leave when you go,\nfilled completely when you come back.',
+   facts:['In 2019 its central black hole became the first one ever photographed.','That black hole has the mass of about 6.5 billion suns.','It fires a jet of particles at nearly the speed of light, about 5,000 light-years long.']},
+  {id:'rue', name:'Cartwheel Galaxy', draw:'anillo', f:'anillo', d:500000000, seed:97,
+   poem:'One galaxy crashed into another\nand instead of breaking apart\nit became a ring of new stars.\nThat\'s what meeting you was like:\na crash that made me shine.',
+   facts:['Its wheel shape formed when another galaxy plunged straight through it a few hundred million years ago.','The James Webb Space Telescope photographed it in 2022 in never-before-seen detail.','The outer ring is a wave of newborn stars that is still expanding.']}
 ];
 const LINES = [
-  'Tu sonrisa tiene su propia órbita.','Aquí brillabas más que cualquier estrella.','Contigo cualquier noche es noche de luna llena.',
-  'Si me pierdo, sigo tu luz.','Una supernova de risas.','Esta foto tiene gravedad: no puedo dejar de mirarla.',
-  'Polvo de estrellas con aretes dorados.','El cosmos entero cabe en este abrazo.','Hasta los cometas se detienen a mirarte.',
-  'Eres mi norte, mi sur y mi cielo.','Aterrizaje perfecto en tu mirada.','Tu risa: mi frecuencia favorita del universo.',
-  'Hay planetas con menos luz que tú.','Aquí el tiempo se volvió eterno.','Mi constelación preferida eres tú.',
-  'Un eclipse no me taparía este recuerdo.','Que nunca se acaben estos viajes.','Brillas sin intentarlo.',
-  'Eres el lugar donde quiero quedarme.','Tu nombre suena a marea tranquila.','Lola, mi estrella fugaz que sí se quedó.',
-  'Te elegiría en cualquier galaxia.','Cada foto contigo es un planeta nuevo.','Contigo hasta el silencio brilla.',
-  'Mi cielo tiene tus ojos.','Navegando por la Vía Láctea de tu pelo.','Gravedad cero, amor infinito.',
-  'Así se ve la felicidad desde aquí arriba.','Mi luna, mi mar, mi playa.','Te quiero más que estrellas hay en el cielo.',
-  'Contigo el universo tiene sentido.','Esta sonrisa merece su propio telescopio.','Aquí empezó otra vuelta al sol juntos.',
-  'Eres mi lugar favorito del mapa.','Te encontraría en cualquier rincón del cosmos.','Ni la Vía Láctea tiene tanto brillo.',
-  'Un recuerdo que orbita mi corazón.','Mi gravedad siempre me lleva a ti.','Si el cielo tuviera tu cara, nunca dejaría de mirarlo.',
-  'Contigo cada día es un descubrimiento.','Tu abrazo es mi atmósfera.','En este instante el mundo se detuvo.',
-  'Amo tu luz, incluso en los días nublados.','Prefiero un minuto contigo que una eternidad entre estrellas.','Aquí fuimos dos estrellas en la misma constelación.',
-  'Contigo aprendí que el amor también se expande.','Una foto, mil años luz de amor.','Eres la estrella que guía mis noches.',
-  'Bailando entre planetas contigo.','Lola, eres mi universo favorito.'
+  'Your smile has its own orbit.','Here you shone brighter than any star.','With you, every night is a full moon.',
+  'If I get lost, I follow your light.','A supernova of laughter.','This photo has gravity: I can\'t stop looking at it.',
+  'Stardust with golden earrings.','The whole cosmos fits in this hug.','Even comets stop to look at you.',
+  'You are my north, my south and my sky.','A perfect landing in your eyes.','Your laugh: my favorite frequency in the universe.',
+  'There are planets with less light than you.','Here, time became eternal.','You are my favorite constellation.',
+  'Not even an eclipse could hide this memory.','May these trips never end.','You shine without even trying.',
+  'You are the place I want to stay.','Your name sounds like a calm tide.','Lola, my shooting star that stayed.',
+  'I would choose you in any galaxy.','Every photo with you is a new planet.','With you, even silence shines.',
+  'My sky has your eyes.','Sailing the Milky Way of your hair.','Zero gravity, infinite love.',
+  'This is what happiness looks like from up here.','My moon, my sea, my beach.','I love you more than there are stars in the sky.',
+  'With you, the universe makes sense.','This smile deserves its own telescope.','Here began another trip around the sun together.',
+  'You are my favorite place on the map.','I would find you in any corner of the cosmos.','Not even the Milky Way shines this bright.',
+  'A memory that orbits my heart.','My gravity always pulls me back to you.','If the sky had your face, I would never stop looking up.',
+  'Every day with you is a discovery.','Your hug is my atmosphere.','In this moment, the world stood still.',
+  'I love your light, even on cloudy days.','I\'d rather have one minute with you than an eternity among the stars.','Here we were two stars in the same constellation.',
+  'With you I learned that love expands too.','One photo, a thousand light-years of love.','You are the star that guides my nights.',
+  'Dancing between planets with you.','Lola, you are my favorite universe.'
 ];
 
 /* ---------- Photos split across the galaxies, in upload order ---------- */
@@ -537,7 +548,7 @@ async function loadPhotos(){
   GALAXIES.forEach((g, gi) => {
     const group = photos.slice(Math.round(gi*photos.length/N), Math.round((gi+1)*photos.length/N)).map(([n, w, h]) => ({type:'img', thumb:'t/' + n, src:'f/' + n, w, h}));
     if (gi === 0) group.splice(2, 0, {type:'video', thumb:'video.jpg', src:'video.mp4', w:9, h:16});
-    group.forEach(it => { it.cap = it.type === 'video' ? 'Dale play: este momento se mueve.' : LINES[li++ % LINES.length]; });
+    group.forEach(it => { it.cap = it.type === 'video' ? 'Press play: this moment moves.' : LINES[li++ % LINES.length]; });
     MEM[g.id] = group;
   });
 }
@@ -548,10 +559,10 @@ function buildAtlas(){
   GALAXIES.forEach(g => {
     const n = (MEM[g.id] || []).length, first = (MEM[g.id] || []).find(m => m.type === 'img');
     const li = document.createElement('li'); li.dataset.f = g.f;
-    li.innerHTML = `<button class="gal" type="button" aria-haspopup="dialog"><span class="orb"><canvas width="320" height="320" aria-hidden="true"></canvas>${first ? `<img class="peek" src="${first.thumb}" alt="" loading="lazy">` : ''}</span><strong>${g.name}</strong><span class="meta">${LABEL[g.draw]} · <span class="count">${n} recuerdos</span></span></button>`;
+    li.innerHTML = `<button class="gal" type="button"><span class="orb"><canvas width="320" height="320" aria-hidden="true"></canvas>${first ? `<img class="peek" src="${first.thumb}" alt="" loading="lazy">` : ''}</span><strong>${g.name}</strong><span class="meta">${LABEL[g.draw]} · <span class="count">${n} memories</span></span></button>`;
     cache[g.id] = makeGalaxy(g.draw, g.seed, 2600);
     drawGalaxy(li.querySelector('canvas').getContext('2d'), cache[g.id], 320, 320, g.seed, g.draw === 'lenticular' ? .62 : .62, .95);
-    li.querySelector('button').addEventListener('click', () => openModal(g));
+    li.querySelector('button').addEventListener('click', e => launch(g, e.currentTarget));
     atlas.appendChild(li);
   });
 }
@@ -572,16 +583,15 @@ function openModal(g){
   document.getElementById('mType').textContent = LABEL[g.draw];
   document.getElementById('mName').textContent = g.name;
   document.getElementById('mFacts').innerHTML = g.facts.map(f => `<li>${f}</li>`).join('');
-  document.getElementById('mCount').textContent = `${(MEM[g.id] || []).length} recuerdos te esperan dentro`;
-  const years = g.d >= 1e6 ? `${fmt(g.d/1e6)} millones de años` : `${fmt(g.d)} años`;
-  document.getElementById('mLight').textContent = `${g.dNote ? 'Distancia ' + g.dNote + '. ' : ''}La luz que hoy vemos de ${g.name} salió hace ${years}.`;
+  const years = g.d >= 1e6 ? `${fmt(g.d/1e6)} million years` : `${fmt(g.d)} years`;
+  document.getElementById('mLight').textContent = `${g.dNote ? 'Distance ' + g.dNote + '. ' : ''}The light we see from it today left ${years} ago.`;
   const labels = document.getElementById('mLabels'), bar = document.getElementById('mBar');
   bar.querySelectorAll('.bar-tick').forEach(t => t.remove()); labels.innerHTML = '';
-  [{v:1e3, t:'1.000'}, {v:1e6, t:'1 millón'}, {v:1e9, t:'1.000 millones'}].forEach(m => {
+  [{v:1e3, t:'1,000'}, {v:1e6, t:'1 million'}, {v:1e9, t:'1 billion'}].forEach(m => {
     const s = document.createElement('span'); s.style.left = pct(m.v) + '%'; s.textContent = m.t; labels.appendChild(s);
     const t = document.createElement('i'); t.className = 'bar-tick'; t.style.left = pct(m.v) + '%'; bar.appendChild(t);
   });
-  bar.setAttribute('aria-valuenow', Math.round(pct(g.d))); bar.setAttribute('aria-valuetext', `${fmt(g.d)} años luz`);
+  bar.setAttribute('aria-valuenow', Math.round(pct(g.d))); bar.setAttribute('aria-valuetext', `${fmt(g.d)} light-years`);
   const fill = document.getElementById('mFill'), num = document.getElementById('mDist');
   fill.style.transition = 'none'; fill.style.width = '0'; num.textContent = '0';
   modal.showModal();
@@ -598,7 +608,6 @@ function openModal(g){
 }
 document.getElementById('mClose').addEventListener('click', () => modal.close());
 modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });
-document.getElementById('mEnter').addEventListener('click', () => { modal.close(); openExplorer(current); });
 
 /* ---------- Galaxy explorer: warp in, then a big draggable galaxy with photo stars ---------- */
 const ex = document.getElementById('explorer'), exC = document.getElementById('exCanvas'), exX = exC.getContext('2d');
@@ -620,20 +629,20 @@ function nodePos(type, i, n, seed){
 function openExplorer(g){
   exGal = g; exItems = MEM[g.id] || [];
   document.getElementById('exName').textContent = g.name;
-  document.getElementById('exType').textContent = `${LABEL[g.draw]} · ${exItems.length} recuerdos`;
+  document.getElementById('exType').textContent = `${LABEL[g.draw]} · ${exItems.length} memories`;
   exPoem.textContent = g.poem; exPoem.hidden = false;
-  document.getElementById('exPoemToggle').textContent = 'Ocultar poema';
-  exGrid.hidden = true; exNodes.hidden = false; ex.classList.remove('grid-on'); document.getElementById('exGridToggle').textContent = 'Ver como álbum';
+  document.getElementById('exPoemToggle').textContent = 'Hide poem';
+  exGrid.hidden = true; exNodes.hidden = false; ex.classList.remove('grid-on'); document.getElementById('exGridToggle').textContent = 'See as album';
   exPts = makeGalaxy(g.draw, g.seed, small() ? 6000 : 11000);
   exNodes.innerHTML = '';
   exNodeEls = exItems.map((it, i) => {
     const b = document.createElement('button'); b.type = 'button';
     b.className = 'node' + (it.type === 'video' ? ' video' : '');
-    b.setAttribute('aria-label', it.type === 'video' ? 'Ver video' : 'Ver foto: ' + it.cap);
+    b.setAttribute('aria-label', it.type === 'video' ? 'Watch video' : 'See photo: ' + it.cap);
     const im = document.createElement('img'); im.src = it.thumb; im.alt = ''; im.decoding = 'async'; b.appendChild(im);
     b.addEventListener('click', () => { if (!dragMoved) openLb(exItems, i, g.name); });
     exNodes.appendChild(b);
-    return {el:b, p:nodePos(g.draw, i, exItems.length, g.seed)};
+    return {el:b, p:{...nodePos(g.draw, i, exItems.length, g.seed), rigid:true}};
   });
   const list = document.getElementById('exGridList'); list.innerHTML = '';
   exItems.forEach((it, i) => {
@@ -643,19 +652,50 @@ function openExplorer(g){
     li.querySelector('button').addEventListener('click', () => openLb(exItems, i, g.name));
     list.appendChild(li);
   });
-  Object.assign(V, {rot:g.seed, tRot:g.seed, tilt:.78, tTilt:.78, zoom:reduce ? 1 : .04, tZoom:1, vr:0, start:performance.now()});
+  Object.assign(V, {leave:0, rot:g.seed, tRot:g.seed, tilt:.78, tTilt:.78, zoom:reduce ? 1 : .04, tZoom:1, vr:0, start:performance.now()});
   ex.hidden = false; document.body.classList.add('locked');
   exSize(); cancelAnimationFrame(exRaf); exRaf = requestAnimationFrame(exFrame);
   document.getElementById('exClose').focus();
 }
-function closeExplorer(){
-  ex.hidden = true; document.body.classList.remove('locked'); cancelAnimationFrame(exRaf);
+// Tapping a card: its galaxy swells toward the viewer, then the warp takes over.
+function launch(g, btn){
+  if (!ex.hidden || btn.classList.contains('launch')) return;
+  lastCard = btn;
+  if (reduce){ openExplorer(g); return; }
+  btn.classList.add('launch');
+  setTimeout(() => { openExplorer(g); btn.classList.remove('launch'); }, 380);
 }
-const WARP = 900;
+let lastCard = null;
+// Leaving plays the entry in reverse: photos fade, the galaxy shrinks away and the stars stream back in.
+function closeExplorer(){
+  if (ex.hidden || V.leave) return;
+  if (modal.open) modal.close();
+  if (reduce){ finishClose(); return; }
+  V.leave = performance.now(); V.tZoom = .02;
+  exNodeEls.forEach(n => n.el.classList.remove('on'));
+  exGrid.hidden = true; exNodes.hidden = false; ex.classList.remove('grid-on'); exPoem.hidden = true;
+  ex.classList.add('leaving');
+}
+function finishClose(){
+  ex.hidden = true; ex.classList.remove('leaving'); V.leave = 0;
+  document.body.classList.remove('locked'); cancelAnimationFrame(exRaf);
+  if (lastCard){ lastCard.classList.add('land'); lastCard.focus({preventScroll:true}); setTimeout(() => lastCard.classList.remove('land'), 700); }
+}
+const WARP = 900, EXIT = 1100;
 let warpStars = Array.from({length:260}, () => ({a:Math.random()*6.28, d:Math.random(), s:.5 + Math.random()}));
 function exFrame(t){
   const el = t - V.start, W = exW, H = exH, base = Math.min(W, H);
   exX.clearRect(0, 0, W, H);
+  if (V.leave){
+    const out = t - V.leave, k = Math.min(1, out/EXIT);
+    exX.strokeStyle = 'rgba(242,234,216,.85)'; exX.lineWidth = 1.2*exDpr; exX.globalAlpha = Math.min(1, out/250)*(1 - Math.max(0, (k - .75)/.25));
+    for (const s of warpStars){
+      const d0 = ((s.d + (1 - k)*s.s*1.6) % 1), r0 = d0*d0*base*.9, r1 = r0 + (8 + 60*k)*exDpr*d0;
+      exX.beginPath(); exX.moveTo(W/2 + Math.cos(s.a)*r0, H/2 + Math.sin(s.a)*r0); exX.lineTo(W/2 + Math.cos(s.a)*r1, H/2 + Math.sin(s.a)*r1); exX.stroke();
+    }
+    exX.globalAlpha = 1;
+    if (out >= EXIT){ finishClose(); return; }
+  }
   // 1) warp: stars stream out from the centre as we jump into the galaxy
   if (!reduce && el < WARP + 500){
     const k = Math.min(1, el/WARP), fade = el > WARP ? 1 - (el - WARP)/500 : 1;
@@ -670,7 +710,7 @@ function exFrame(t){
   const ready = reduce || el > WARP*.6;
   if (ready){
     if (!dragging){ V.tRot += reduce ? 0 : .0012 + V.vr; V.vr *= .95; }
-    V.rot += (V.tRot - V.rot)*.12; V.tilt += (V.tTilt - V.tilt)*.1; V.zoom += (V.tZoom - V.zoom)*(V.zoom < .9 ? .045 : .12);
+    V.rot += (V.tRot - V.rot)*.12; V.tilt += (V.tTilt - V.tilt)*.1; V.zoom += (V.tZoom - V.zoom)*(V.leave ? .09 : V.zoom < .9 ? .045 : .12);
     const view = {cx:W/2, cy:H*.48, R:base*.44*V.zoom, rot:V.rot, tilt:V.tilt};
     paintGalaxy(exX, exPts, view, base*.8);
     const sz = (small() ? 46 : 64)*Math.min(1.8, Math.max(.6, Math.sqrt(V.zoom)));
@@ -679,7 +719,7 @@ function exFrame(t){
       n.el.style.setProperty('--s', s.toFixed(1) + 'px');
       n.el.style.transform = `translate(${(px/exDpr).toFixed(1)}px,${(py/exDpr).toFixed(1)}px)`;
       n.el.style.zIndex = 10 + Math.round(depth*10);
-      if (V.zoom > .55 && !n.el.classList.contains('on')) setTimeout(() => n.el.classList.add('on'), reduce ? 0 : i*45);
+      if (!V.leave && V.zoom > .55 && !n.el.classList.contains('on')) setTimeout(() => n.el.classList.add('on'), reduce ? 0 : i*45);
     });
   }
   exRaf = requestAnimationFrame(exFrame);
@@ -709,11 +749,12 @@ const endPtr = e => { pointers.delete(e.pointerId); if (pointers.size < 2) pinch
 addEventListener('pointerup', endPtr); addEventListener('pointercancel', endPtr);
 ex.addEventListener('wheel', e => { if (!exGrid.hidden) return; e.preventDefault(); V.tZoom = Math.max(.6, Math.min(3, V.tZoom*(e.deltaY > 0 ? .9 : 1.1))); }, {passive:false});
 document.getElementById('exClose').addEventListener('click', closeExplorer);
+document.getElementById('exFacts').addEventListener('click', () => openModal(exGal));
 document.getElementById('exPoemToggle').addEventListener('click', e => {
-  exPoem.hidden = !exPoem.hidden; e.currentTarget.textContent = exPoem.hidden ? 'Leer poema' : 'Ocultar poema';
+  exPoem.hidden = !exPoem.hidden; e.currentTarget.textContent = exPoem.hidden ? 'Read poem' : 'Hide poem';
 });
 document.getElementById('exGridToggle').addEventListener('click', e => {
-  exGrid.hidden = !exGrid.hidden; e.currentTarget.textContent = exGrid.hidden ? 'Ver como álbum' : 'Ver la galaxia';
+  exGrid.hidden = !exGrid.hidden; e.currentTarget.textContent = exGrid.hidden ? 'See as album' : 'See the galaxy';
   exNodes.hidden = !exGrid.hidden; ex.classList.toggle('grid-on', !exGrid.hidden);
   if (!exGrid.hidden) exGrid.scrollTop = 0;
 });
@@ -742,38 +783,38 @@ stage.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passi
 stage.addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 45) lbShow(lbCur + (dx < 0 ? 1 : -1)); });
 document.addEventListener('keydown', e => {
   if (!lb.hidden){ if (e.key === 'Escape') closeLb(); else if (e.key === 'ArrowRight') lbShow(lbCur + 1); else if (e.key === 'ArrowLeft') lbShow(lbCur - 1); return; }
-  if (!ex.hidden && e.key === 'Escape') closeExplorer();
+  if (!ex.hidden && !modal.open && e.key === 'Escape') closeExplorer();
 });
 
 /* ---------- Star life cycle, with a reason and a message at each stage ---------- */
 const CYCLES = {
   sol:[
-    {n:'Nebulosa', d:'Una nube fría de gas y polvo empieza a encogerse por su propia gravedad.', c:'#7f8fd8', r:.42, neb:true,
-     why:'Porque contigo empezó todo lo bonito: eres el origen de mis mejores días.', msg:'Lola, gracias por ser el comienzo de esta historia.'},
-    {n:'Protoestrella', d:'El centro se calienta y brilla, envuelto todavía en un capullo de polvo.', c:'#ffb38a', r:.2, neb:.5,
-     why:'Porque tu calma me enciende por dentro, como el primer calor de una estrella.', msg:'Todavía siento ese primer calor cada vez que me miras.'},
-    {n:'Secuencia principal', d:'Se enciende la fusión de hidrógeno. Aquí pasa el 90% de su vida; el Sol lleva 4.600 millones de años en esta etapa y le quedan unos 5.000 millones más.', c:'#f4c96b', r:.18,
-     why:'Porque tu sonrisa me da luz todos los días, como el Sol a la Tierra.', msg:'Quiero pasar la mayor parte de mi vida así: brillando contigo.'},
-    {n:'Gigante roja', d:'Se le acaba el hidrógeno del centro y se hincha hasta tragarse a los planetas cercanos.', c:'#ff7b55', r:.4,
-     why:'Porque lo que siento por ti no deja de crecer.', msg:'Si algún día me hago gigante, que sea de tanto quererte.'},
-    {n:'Nebulosa planetaria', d:'Suelta sus capas exteriores en un anillo de gas brillante que dura unos miles de años.', c:'#49c6c9', r:.38, ring:true,
-     why:'Porque dejas color y belleza en todo lo que tocas.', msg:'Cada lugar al que vamos queda más bonito contigo.'},
-    {n:'Enana blanca', d:'Queda un núcleo del tamaño de la Tierra, tan denso que una cucharadita pesaría toneladas.', c:'#e8f2ff', r:.06,
-     why:'Porque aun en los días pequeños, tu luz sigue intacta.', msg:'Al final de todo, quiero seguir siendo tu luz.'}
+    {n:'Nebula', d:'A cold cloud of gas and dust starts to shrink under its own gravity.', c:'#7f8fd8', r:.42, neb:true,
+     why:'Because everything beautiful began with you: you are the origin of my best days.', msg:'Lola, thank you for being the beginning of this story.'},
+    {n:'Protostar', d:'The core heats up and glows, still wrapped in a cocoon of dust.', c:'#ffb38a', r:.2, neb:.5,
+     why:'Because your calm lights me up inside, like a star\'s first warmth.', msg:'I still feel that first warmth every time you look at me.'},
+    {n:'Main sequence', d:'Hydrogen fusion switches on. A star spends 90% of its life here; the Sun has been in this stage for 4.6 billion years and has about 5 billion left.', c:'#f4c96b', r:.18,
+     why:'Because your smile gives me light every day, like the Sun gives the Earth.', msg:'I want to spend most of my life like this: shining with you.'},
+    {n:'Red giant', d:'It runs out of hydrogen in its core and swells until it swallows the nearest planets.', c:'#ff7b55', r:.4,
+     why:'Because what I feel for you never stops growing.', msg:'If I ever become a giant, let it be from loving you so much.'},
+    {n:'Planetary nebula', d:'It sheds its outer layers in a glowing ring of gas that lasts a few thousand years.', c:'#49c6c9', r:.38, ring:true,
+     why:'Because you leave color and beauty in everything you touch.', msg:'Every place we go is more beautiful with you.'},
+    {n:'White dwarf', d:'What remains is a core the size of Earth, so dense that a teaspoon of it would weigh tons.', c:'#e8f2ff', r:.06,
+     why:'Because even on the small days, your light stays whole.', msg:'At the end of everything, I want to still be your light.'}
   ],
   masiva:[
-    {n:'Nebulosa', d:'Una nube gigante de gas y polvo colapsa y forma un cúmulo de estrellas.', c:'#7f8fd8', r:.44, neb:true,
-     why:'Porque contigo me atrevo a soñar en grande.', msg:'Nuestro universo apenas está empezando a formarse.'},
-    {n:'Protoestrella', d:'Acumula materia a gran velocidad y en poco tiempo supera ocho veces la masa del Sol.', c:'#ffc49e', r:.24, neb:.5,
-     why:'Porque a tu lado los planes crecen rápido y bonito.', msg:'Me encanta crecer contigo.'},
-    {n:'Estrella azul', d:'Arde tan rápido que vive solo unos millones de años, miles de veces más brillante que el Sol.', c:'#9cc8ff', r:.22,
-     why:'Porque brillas con una intensidad que se nota desde lejos.', msg:'Nunca dejes de brillar así.'},
-    {n:'Supergigante roja', d:'Se hincha hasta un tamaño mayor que la órbita de Júpiter, como Betelgeuse en Orión.', c:'#ff6a48', r:.46,
-     why:'Porque tu corazón es enorme y siempre tiene espacio para los demás.', msg:'Y en el mío cabes tú entera, siempre.'},
-    {n:'Supernova', d:'Su núcleo colapsa en un segundo y explota; por unas semanas brilla más que toda su galaxia.', c:'#fff3d0', r:.48, burst:true,
-     why:'Porque cada vez que te veo, algo en mí explota de alegría.', msg:'Eres mi explosión favorita del universo.'},
-    {n:'Estrella de neutrones o agujero negro', d:'Queda una esfera de neutrones del tamaño de una ciudad o, si es muy masiva, un agujero negro.', c:'#2a2f66', r:.08, hole:true,
-     why:'Porque tu gravedad me atrapa y no quiero escapar.', msg:'Me quedo en tu órbita para siempre.'}
+    {n:'Nebula', d:'A giant cloud of gas and dust collapses and forms a cluster of stars.', c:'#7f8fd8', r:.44, neb:true,
+     why:'Because with you I dare to dream big.', msg:'Our universe is only just beginning to form.'},
+    {n:'Protostar', d:'It gathers matter at high speed and soon passes eight times the mass of the Sun.', c:'#ffc49e', r:.24, neb:.5,
+     why:'Because by your side, plans grow fast and beautiful.', msg:'I love growing with you.'},
+    {n:'Blue star', d:'It burns so fast that it lives only a few million years, thousands of times brighter than the Sun.', c:'#9cc8ff', r:.22,
+     why:'Because you shine with an intensity people notice from far away.', msg:'Never stop shining like that.'},
+    {n:'Red supergiant', d:'It swells to a size bigger than Jupiter\'s orbit, like Betelgeuse in Orion.', c:'#ff6a48', r:.46,
+     why:'Because your heart is huge and always has room for others.', msg:'And all of you fits in mine, always.'},
+    {n:'Supernova', d:'Its core collapses in a second and explodes; for a few weeks it outshines its whole galaxy.', c:'#fff3d0', r:.48, burst:true,
+     why:'Because every time I see you, something in me explodes with joy.', msg:'You are my favorite explosion in the universe.'},
+    {n:'Neutron star or black hole', d:'What remains is a ball of neutrons the size of a city or, if it is massive enough, a black hole.', c:'#2a2f66', r:.08, hole:true,
+     why:'Because your gravity pulls me in and I don\'t want to escape.', msg:'I\'m staying in your orbit forever.'}
   ]
 };
 let mass = 'sol', step = 0;
@@ -784,7 +825,7 @@ function renderSteps(){
   CYCLES[mass].forEach((s, i) => {
     const li = document.createElement('li');
     const no = (mass === 'sol' ? 0 : 6) + i + 1;
-    li.innerHTML = `<button type="button"${i === step ? ' aria-current="step"' : ''}><span><strong>${s.n}</strong><span class="more"><span class="desc">${s.d}</span><span class="why"><b>Razón ${no} por la que te amo</b><span>${s.why}</span></span><span class="note">${s.msg}</span></span></span></button>`;
+    li.innerHTML = `<button type="button"${i === step ? ' aria-current="step"' : ''}><span><strong>${s.n}</strong><span class="more"><span class="desc">${s.d}</span><span class="why"><b>Reason ${no} why I love you</b><span>${s.why}</span></span><span class="note">${s.msg}</span></span></span></button>`;
     li.firstChild.addEventListener('click', () => { step = i; renderSteps(); });
     stepsEl.appendChild(li);
   });
@@ -847,12 +888,12 @@ renderSteps();
 
 /* ---------- Quiz ---------- */
 const QUIZ = [
-  {q:'¿Cuál es la galaxia más lejana que puedes ver a simple vista?', a:['La Gran Nube de Magallanes','Andrómeda','La galaxia del Sombrero'], ok:1,
-   why:'Andrómeda está a 2,5 millones de años luz, y en una noche oscura se ve como una mancha suave.'},
-  {q:'¿En qué termina una estrella como el Sol?', a:['En un agujero negro','En una supernova','En una enana blanca'], ok:2,
-   why:'El Sol no tiene masa suficiente para explotar: se hará gigante roja y terminará como enana blanca.'},
-  {q:'¿Qué hay en el centro de la Vía Láctea?', a:['Un agujero negro de 4 millones de soles','Una estrella gigante azul','Nada, está vacío'], ok:0,
-   why:'Se llama Sagitario A*, y está a unos 26.000 años luz de nosotros.'}
+  {q:'What is the farthest galaxy you can see with the naked eye?', a:['The Large Magellanic Cloud','Andromeda','The Sombrero Galaxy'], ok:1,
+   why:'Andromeda is 2.5 million light-years away, and on a dark night it looks like a soft smudge.'},
+  {q:'How does a star like the Sun end its life?', a:['As a black hole','As a supernova','As a white dwarf'], ok:2,
+   why:'The Sun is not massive enough to explode: it will become a red giant and end as a white dwarf.'},
+  {q:'What is at the center of the Milky Way?', a:['A black hole of 4 million suns','A giant blue star','Nothing, it is empty'], ok:0,
+   why:'It is called Sagittarius A*, and it is about 26,000 light-years from us.'}
 ];
 let qi = 0, score = 0;
 const qBox = document.getElementById('qBox'), qTicks = [...document.querySelectorAll('#qBar i')];
@@ -860,7 +901,7 @@ const setScore = () => { document.getElementById('qScore').textContent = score; 
 function showQ(){
   const item = QUIZ[qi];
   qTicks.forEach((t, i) => t.classList.toggle('now', i === qi && !t.classList.contains('ok') && !t.classList.contains('no')));
-  qBox.innerHTML = `<div class="q"><p class="q-count">Pregunta ${qi + 1} de ${QUIZ.length}</p><h3>${item.q}</h3><div class="answers">${item.a.map((t, i) => `<button type="button" data-i="${i}">${t}</button>`).join('')}</div></div>`;
+  qBox.innerHTML = `<div class="q"><p class="q-count">Question ${qi + 1} of ${QUIZ.length}</p><h3>${item.q}</h3><div class="answers">${item.a.map((t, i) => `<button type="button" data-i="${i}">${t}</button>`).join('')}</div></div>`;
   qBox.querySelectorAll('.answers button').forEach(b => b.addEventListener('click', () => answer(+b.dataset.i)));
 }
 function answer(i){
@@ -869,15 +910,15 @@ function answer(i){
   if (right) score++;
   setScore(); qTicks[qi].classList.remove('now'); qTicks[qi].classList.add(right ? 'ok' : 'no');
   const lastQ = qi === QUIZ.length - 1;
-  qBox.querySelector('.q').insertAdjacentHTML('beforeend', `<p class="explain">${right ? '¡Correcto!' : 'Casi.'} ${item.why}</p><button type="button" class="pill solid q-next">${lastQ ? 'Ver resultado' : 'Siguiente pregunta'}</button>`);
+  qBox.querySelector('.q').insertAdjacentHTML('beforeend', `<p class="explain">${right ? 'Correct!' : 'Almost.'} ${item.why}</p><button type="button" class="pill solid q-next">${lastQ ? 'See result' : 'Next question'}</button>`);
   const next = qBox.querySelector('.q-next'); next.focus({preventScroll:true});
   next.addEventListener('click', () => { if (lastQ) endQuiz(); else { qi++; showQ(); qBox.querySelector('.answers button').focus({preventScroll:true}); } });
 }
 function endQuiz(){
-  const msg = score === 3 ? 'Tres de tres. Ya conoces el cielo tan bien como yo te conozco a ti.'
-            : score === 2 ? 'Dos de tres. Muy bien; la próxima noche de estrellas te enseño la que falta.'
-            : 'El universo es enorme y tenemos toda la vida para recorrerlo juntos.';
-  qBox.innerHTML = `<div class="q-end"><p>${msg}</p><button type="button" class="pill solid q-next" id="qAgain">Jugar otra vez</button></div>`;
+  const msg = score === 3 ? 'Three out of three. You know the sky as well as I know you.'
+            : score === 2 ? 'Two out of three. Well done; on the next starry night I\'ll show you the one you missed.'
+            : 'The universe is huge, and we have our whole lives to explore it together.';
+  qBox.innerHTML = `<div class="q-end"><p>${msg}</p><button type="button" class="pill solid q-next" id="qAgain">Play again</button></div>`;
   document.getElementById('qAgain').addEventListener('click', () => { qi = 0; score = 0; setScore(); qTicks.forEach(t => t.className = ''); showQ(); });
 }
 setScore(); showQ();

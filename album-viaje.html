@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#060716">
-<meta name="description" content="Un viaje por nuestro universo · Para Lola">
-<title>Para Lola</title>
+<meta name="description" content="A journey through our universe · For Lola">
+<title>For Lola</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant:ital,wght@1,400;1,500&family=Jost:wght@300;400;500&display=swap">
@@ -134,67 +134,87 @@ main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
 
 <main>
   <section class="hero" id="inicio">
-    <div class="eyebrow">Bitácora de un viaje</div>
-    <h1>Para Lola</h1>
-    <p>Un viaje por el universo, de la Tierra a las estrellas y de vuelta a ti.</p>
-    <a class="go" href="#parada-1">Despegar ✦</a>
-    <nav class="route" id="route" aria-label="Paradas del viaje"></nav>
+    <div class="eyebrow">Logbook of a journey</div>
+    <h1>For Lola</h1>
+    <p>A journey through the universe, from Earth to the stars and back to you.</p>
+    <a class="go" href="#parada-1">Lift off ✦</a>
+    <nav class="route" id="route" aria-label="Stops on the journey"></nav>
   </section>
 
   <div id="stops"></div>
 
   <section class="finale" id="final">
-    <div class="eyebrow">Fin del recorrido</div>
-    <h2>Te amo, <span>Lola</span></h2>
-    <p>Recorrimos todo el cielo y la conclusión es la misma: mi lugar favorito del universo eres tú.</p>
-    <div class="sign">Con todo mi amor · Harold</div>
+    <div class="eyebrow">End of the journey</div>
+    <h2>I love you, <span>Lola</span></h2>
+    <p>We crossed the whole sky and the conclusion is the same: my favorite place in the universe is you.</p>
+    <div class="sign">With all my love · Harold</div>
   </section>
 </main>
 
-<div class="odo" aria-live="off"><span>✦</span><b id="odoNum">0</b><span id="odoUnit">km</span><span class="where" id="odoWhere">· Tierra</span></div>
+<div class="odo" aria-live="off"><span>✦</span><b id="odoNum">0</b><span id="odoUnit">km</span><span class="where" id="odoWhere">· Earth</span></div>
 
-<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto en grande">
-  <div class="lb-bar"><span id="lbPos">1 / 1</span><button class="btn" id="lbClose" type="button">Cerrar</button></div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo">
+  <div class="lb-bar"><span id="lbPos">1 / 1</span><button class="btn" id="lbClose" type="button">Close</button></div>
   <div class="lb-stage" id="lbStage">
-    <button class="lb-side prev" type="button" aria-label="Anterior" id="sidePrev"></button>
-    <button class="lb-side next" type="button" aria-label="Siguiente" id="sideNext"></button>
+    <button class="lb-side prev" type="button" aria-label="Previous" id="sidePrev"></button>
+    <button class="lb-side next" type="button" aria-label="Next" id="sideNext"></button>
   </div>
   <div class="lb-cap" id="lbCap"></div>
-  <div class="lb-nav"><button class="btn" id="lbPrev" type="button">← Anterior</button><button class="btn" id="lbNext" type="button">Siguiente →</button></div>
+  <div class="lb-nav"><button class="btn" id="lbPrev" type="button">← Previous</button><button class="btn" id="lbNext" type="button">Next →</button></div>
 </div>
 
 <script>
 const STOPS = [
-  { name: 'Polvo de estrellas', coord: 'Órbita baja · 400 km de la Tierra', emblem: 'stars',
+  { name: 'Stardust', coord: 'Low orbit · 400 km from Earth', emblem: 'stars',
     tint: 'radial-gradient(ellipse at 20% 10%, rgba(80,60,160,.35), transparent 60%)',
-    poem: 'Antes de ti, el cielo era un mapa sin nombres.\nLlegaste tú, Lola, y cada estrella\naprendió a decir tu nombre en voz baja.\nHoy despego contigo:\nno hay gravedad que me sostenga\ncuando me miras.' },
-  { name: 'La Luna', coord: '384.400 km · Mar de la Tranquilidad', emblem: 'moon',
+    poem: 'Before you, the sky was a map with no names.\nThen you arrived, Lola, and every star\nlearned to whisper your name.\nToday I lift off with you:\nno gravity can hold me\nwhen you look at me.' },
+  { name: 'The Moon', coord: '384,400 km · Sea of Tranquility', emblem: 'moon',
     tint: 'radial-gradient(circle at 80% 20%, rgba(220,215,200,.16), transparent 55%)',
-    poem: 'La luna me pidió prestada tu risa\npara alumbrar la noche entera.\nLe dije que no:\nesa luz es mía cuando despierto\ny de nadie más cuando te abrazo.' },
-  { name: 'Constelación Lola', coord: 'Ascensión recta 14h 02m · Declinación +14°', emblem: 'const',
+    poem: 'The moon asked to borrow your laugh\nto light up the whole night.\nI told her no:\nthat light is mine when I wake up\nand no one else\'s when I hold you.' },
+  { name: 'The Lola constellation', coord: 'Right ascension 14h 02m · Declination +14°', emblem: 'const',
     tint: 'radial-gradient(ellipse at 50% 0%, rgba(120,70,190,.32), transparent 60%)',
-    poem: 'Si unes las pecas de tus mejillas\naparece una constelación nueva.\nLa llamé Lola.\nLos astrónomos todavía no la conocen,\npero yo me la sé de memoria.' },
-  { name: 'El mar de Italia', coord: '41°54′ N · 12°29′ E · Roma, Tirreno', emblem: 'italy',
+    poem: 'If you connect the freckles on your cheeks\na new constellation appears.\nI named it Lola.\nAstronomers haven\'t found it yet,\nbut I know it by heart.' },
+  { name: 'The sea of Italy', coord: '41°54′ N · 12°29′ E · Rome, Tyrrhenian Sea', emblem: 'italy',
     tint: 'linear-gradient(180deg, rgba(220,140,70,.18), rgba(40,110,150,.22))',
-    poem: 'En Roma el helado se derretía más lento,\ncomo si el tiempo quisiera quedarse.\nEntre piedras antiguas y calles de colores\nentendí que lo eterno\nno estaba en los monumentos:\nestaba caminando a mi lado.' },
-  { name: 'Santa Marta', coord: '11°14′ N · 74°12′ O · Caribe colombiano', emblem: 'beach',
+    poem: 'In Rome the gelato melted slower,\nas if time wanted to stay.\nAmong ancient stones and colorful streets\nI understood that forever\nwasn\'t in the monuments:\nit was walking beside me.' },
+  { name: 'Santa Marta', coord: '11°14′ N · 74°12′ W · Colombian Caribbean', emblem: 'beach',
     tint: 'linear-gradient(180deg, rgba(255,120,110,.18), rgba(30,170,170,.24))',
-    poem: 'Donde la Sierra baja a besar el mar,\nel Caribe aprendió tu nombre en cada ola.\nQuiero atardeceres de Santa Marta contigo,\narena tibia, sal en los labios\ny tu mano diciendo: aquí, siempre aquí.' },
-  { name: 'Infinito', coord: 'Andrómeda · 2,5 millones de años luz', emblem: 'heart',
+    poem: 'Where the Sierra comes down to kiss the sea,\nthe Caribbean learned your name in every wave.\nI want Santa Marta sunsets with you,\nwarm sand, salt on our lips\nand your hand saying: here, always here.' },
+  { name: 'Infinity', coord: 'Andromeda · 2.5 million light-years', emblem: 'heart',
     tint: 'radial-gradient(ellipse at 50% 60%, rgba(255,110,140,.22), transparent 65%)',
-    poem: 'El universo se expande cada segundo\ny aun así se queda pequeño\npara todo lo que siento por ti.\nLola, mi rincón favorito del cosmos\nes el espacio entre tu hombro y mi mejilla.' }
+    poem: 'The universe expands every second\nand still it is too small\nfor everything I feel for you.\nLola, my favorite corner of the cosmos\nis the space between your shoulder and my cheek.' }
 ];
 const LINES = [
-  'Tu sonrisa tiene su propia órbita.', 'Aquí brillabas más que cualquier estrella.', 'Contigo cualquier noche es noche de luna llena.',
-  'Si me pierdo, sigo tu luz.', 'Una supernova de risas.', 'Esta foto tiene gravedad: no puedo dejar de mirarla.',
-  'Polvo de estrellas con aretes dorados.', 'El cosmos entero cabe en este abrazo.', 'Hasta los cometas se detienen a mirarte.',
-  'Eres mi norte, mi sur y mi cielo.', 'Aterrizaje perfecto en tu mirada.', 'Tu risa: mi frecuencia favorita del universo.',
-  'Hay planetas con menos luz que tú.', 'Aquí el tiempo se volvió eterno.', 'Mi constelación preferida eres tú.',
-  'Un eclipse no me taparía este recuerdo.', 'Que nunca se acaben estos viajes.', 'Brillas sin intentarlo.',
-  'Eres el lugar donde quiero quedarme.', 'Tu nombre suena a marea tranquila.', 'Lola, mi estrella fugaz que sí se quedó.',
-  'Te elegiría en cualquier galaxia.', 'Cada foto contigo es un planeta nuevo.', 'Contigo hasta el silencio brilla.',
-  'Mi cielo tiene tus ojos.', 'Navegando por la Vía Láctea de tu pelo.', 'Gravedad cero, amor infinito.',
-  'Así se ve la felicidad desde aquí arriba.', 'Mi luna, mi mar, mi playa.', 'Te quiero más que estrellas hay en el cielo.'
+  'Your smile has its own orbit.',
+  'Here you shone brighter than any star.',
+  'With you, every night is a full moon.',
+  'If I get lost, I follow your light.',
+  'A supernova of laughter.',
+  'This photo has gravity: I can\'t stop looking at it.',
+  'Stardust with golden earrings.',
+  'The whole cosmos fits in this hug.',
+  'Even comets stop to look at you.',
+  'You are my north, my south and my sky.',
+  'A perfect landing in your eyes.',
+  'Your laugh: my favorite frequency in the universe.',
+  'There are planets with less light than you.',
+  'Here, time became eternal.',
+  'You are my favorite constellation.',
+  'Not even an eclipse could hide this memory.',
+  'May these trips never end.',
+  'You shine without even trying.',
+  'You are the place I want to stay.',
+  'Your name sounds like a calm tide.',
+  'Lola, my shooting star that stayed.',
+  'I would choose you in any galaxy.',
+  'Every photo with you is a new planet.',
+  'With you, even silence shines.',
+  'My sky has your eyes.',
+  'Sailing the Milky Way of your hair.',
+  'Zero gravity, infinite love.',
+  'This is what happiness looks like from up here.',
+  'My moon, my sea, my beach.',
+  'I love you more than there are stars in the sky.'
 ];
 const EMBLEMS = {
   stars: '<svg viewBox="0 0 120 120" class="emblem" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="none" stroke="rgba(244,201,107,.35)"/><g fill="#f4c96b"><path d="M60 20l5 30 30 10-30 10-5 30-5-30-30-10 30-10z"/></g><g fill="#f2ead8"><circle cx="24" cy="30" r="1.6"/><circle cx="96" cy="34" r="2"/><circle cx="92" cy="92" r="1.4"/><circle cx="30" cy="94" r="1.8"/></g></svg>',
@@ -216,7 +236,7 @@ const DIST = [400/9.461e12, 384400/9.461e12, 640, 1300, 26000, 2500000];
   STOPS.forEach((s, si) => {
     const a = document.createElement('a'); a.href = '#parada-' + (si + 1); a.textContent = s.name; route.appendChild(a);
     const sec = document.createElement('section'); sec.className = 'stop'; sec.id = 'parada-' + (si + 1); sec.dataset.i = si;
-    sec.innerHTML = '<div class="stop-head">' + EMBLEMS[s.emblem] + '<div><div class="stop-label">Parada ' + (si + 1) + ' de ' + STOPS.length + '</div><h2></h2><div class="coord"></div></div></div><div class="poem"></div><div class="cards"></div>';
+    sec.innerHTML = '<div class="stop-head">' + EMBLEMS[s.emblem] + '<div><div class="stop-label">Stop ' + (si + 1) + ' of ' + STOPS.length + '</div><h2></h2><div class="coord"></div></div></div><div class="poem"></div><div class="cards"></div>';
     sec.querySelector('h2').textContent = s.name;
     sec.querySelector('.coord').textContent = s.coord;
     sec.querySelector('.poem').textContent = s.poem;
@@ -224,7 +244,7 @@ const DIST = [400/9.461e12, 384400/9.461e12, 640, 1300, 26000, 2500000];
     const group = photos.slice(si * per, (si + 1) * per).map(([n, w, h]) => ({ type: 'img', thumb: 't/' + n, src: 'f/' + n, w, h }));
     if (si === 0) group.splice(3, 0, { type: 'video', thumb: 'video.jpg', src: 'video.mp4' });
     group.forEach(it => {
-      it.cap = it.type === 'video' ? 'Dale play: este momento se mueve.' : LINES[li++ % LINES.length];
+      it.cap = it.type === 'video' ? 'Press play: this moment moves.' : LINES[li++ % LINES.length];
       const idx = items.push(it) - 1;
       const b = document.createElement('button'); b.type = 'button';
       b.className = 'card float' + (it.type === 'video' ? ' video' : '');
@@ -245,13 +265,13 @@ const DIST = [400/9.461e12, 384400/9.461e12, 640, 1300, 26000, 2500000];
   // Odometer + tint follow the stop in view
   const odoNum = document.getElementById('odoNum'), odoWhere = document.getElementById('odoWhere'), tint = document.getElementById('tint');
   const odoUnit = document.getElementById('odoUnit');
-  const fmt = v => { if (v < .001) { odoUnit.textContent = 'km'; return Math.round(v * 9.461e12).toLocaleString('es-CO'); } odoUnit.textContent = 'años luz'; return Math.round(v).toLocaleString('es-CO'); };
+  const fmt = v => { if (v < .001) { odoUnit.textContent = 'km'; return Math.round(v * 9.461e12).toLocaleString('en-US'); } odoUnit.textContent = 'light-years'; return Math.round(v).toLocaleString('en-US'); };
   function onScroll() {
     const secs = [...document.querySelectorAll('.stop')];
     const mid = innerHeight * .45;
     let cur = -1;
     secs.forEach((s, i) => { if (s.getBoundingClientRect().top < mid) cur = i; });
-    if (cur < 0) { odoNum.textContent = '0'; odoUnit.textContent = 'km'; odoWhere.textContent = '· Tierra'; tint.style.background = 'none'; return; }
+    if (cur < 0) { odoNum.textContent = '0'; odoUnit.textContent = 'km'; odoWhere.textContent = '· Earth'; tint.style.background = 'none'; return; }
     const s = secs[cur], r = s.getBoundingClientRect();
     const f = Math.min(1, Math.max(0, (mid - r.top) / r.height));
     const from = cur ? DIST[cur - 1] : 0, to = DIST[cur];
