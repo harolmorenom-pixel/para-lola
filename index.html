@@ -1,0 +1,318 @@
+<title>Para Lola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant:ital,wght@1,400;1,500&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Layout: a scroll-down voyage through six stops in space; each stop has its emblem, a poem, then its photos as floating postcards. Deliberately one dark night-sky look. */
+:root {
+  color-scheme: dark;
+  --space: #060716;
+  --nebula: #241845;
+  --moon: #f2ead8;
+  --dim: #a59fbf;
+  --star: #f4c96b;
+  --sea: #49c6c9;
+  --heart: #ff7d8f;
+  --glass: rgba(18, 16, 44, .62);
+  --rule: rgba(242, 234, 216, .16);
+  --display: "Italiana", "Didot", "Bodoni MT", Georgia, serif;
+  --verse: "Cormorant", "Garamond", Georgia, serif;
+  --body: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--space); color: var(--moon);
+  font-family: var(--body); font-weight: 300; font-size: 16px; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 96px; overflow-x: hidden;
+}
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.tint { position: fixed; inset: 0; z-index: 0; pointer-events: none; transition: background 1.2s ease; }
+main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+
+/* Hero */
+.hero { min-height: 88vh; display: grid; place-content: center; text-align: center; gap: 18px; padding-block: 64px 40px; }
+.eyebrow { font-size: .78rem; letter-spacing: .32em; text-transform: uppercase; color: var(--star); }
+.hero h1 { font-family: var(--display); font-weight: 400; margin: 0; font-size: clamp(4rem, 18vw, 10rem); line-height: .9; letter-spacing: .02em; }
+.hero p { margin: 0 auto; max-width: 34ch; font-family: var(--verse); font-style: italic; font-size: clamp(1.25rem, 4vw, 1.6rem); color: var(--moon); opacity: .9; }
+.go {
+  justify-self: center; margin-top: 10px; display: inline-flex; align-items: center; gap: 10px;
+  color: var(--space); background: var(--star); text-decoration: none; font-weight: 500;
+  padding: 12px 24px; border-radius: 999px; letter-spacing: .04em;
+}
+.go:focus-visible { outline: 2px solid var(--moon); outline-offset: 3px; }
+.route { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; margin-top: 18px; font-size: .78rem; color: var(--dim); letter-spacing: .12em; text-transform: uppercase; }
+.route a { color: inherit; text-decoration: none; }
+.route a:hover { color: var(--star); }
+
+/* Stops */
+.stop { padding-block: 72px 24px; display: grid; gap: 28px; scroll-margin-top: 24px; }
+.stop-head { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+@media (max-width: 560px) { .stop-head { grid-template-columns: 1fr; justify-items: center; text-align: center; } }
+.emblem { width: 120px; height: 120px; }
+.stop-label { font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; color: var(--star); font-variant-numeric: tabular-nums; }
+.stop h2 { font-family: var(--display); font-weight: 400; margin: 4px 0 0; font-size: clamp(2.4rem, 8vw, 4.2rem); line-height: 1; text-wrap: balance; }
+.coord { color: var(--dim); font-size: .85rem; margin-top: 6px; }
+.poem {
+  margin: 0 auto; max-width: 30em; padding: 26px 28px; border-radius: 4px;
+  background: var(--glass); border: 1px solid var(--rule); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font-family: var(--verse); font-style: italic; font-size: clamp(1.2rem, 3.6vw, 1.45rem); line-height: 1.55; white-space: pre-line; text-align: center;
+}
+.poem::after { content: "— para Lola"; display: block; margin-top: 14px; font-family: var(--body); font-style: normal; font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--heart); }
+
+/* Postcards */
+.cards { columns: 2 150px; column-gap: 14px; }
+@media (min-width: 700px) { .cards { columns: 3 210px; column-gap: 20px; } }
+@media (min-width: 1000px) { .cards { columns: 4 220px; } }
+.card {
+  display: block; width: 100%; break-inside: avoid; margin: 0 0 18px; padding: 8px 8px 10px; border: 0; cursor: zoom-in; text-align: left;
+  background: var(--moon); color: #2a2440; border-radius: 3px; box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.05);
+  transform: rotate(var(--r, 0deg)) translateY(0); transition: transform .35s ease, box-shadow .35s ease;
+  position: relative; font: inherit;
+}
+.card:hover, .card:focus-visible { transform: rotate(0deg) translateY(-4px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,.55), 0 0 26px rgba(244,201,107,.25); }
+.card:focus-visible { outline: 2px solid var(--star); outline-offset: 3px; }
+.card img { display: block; width: 100%; height: auto; border-radius: 2px; background: #cfc6b3; }
+.card .cap { display: block; padding: 8px 2px 0; font-family: var(--verse); font-style: italic; font-size: 1.02rem; line-height: 1.3; }
+.card.float { animation: drift var(--d, 7s) ease-in-out infinite alternate; }
+@keyframes drift { from { translate: 0 0; } to { translate: 0 -6px; } }
+.card.video .play {
+  position: absolute; left: 50%; top: 42%; translate: -50% -50%; width: 58px; height: 58px; border-radius: 50%;
+  background: rgba(6,7,22,.65); display: grid; place-items: center; color: var(--star); font-size: 1.3rem;
+}
+
+/* Finale */
+.finale { min-height: 70vh; display: grid; place-content: center; text-align: center; gap: 16px; padding-block: 80px 40px; }
+.finale h2 { font-family: var(--display); font-weight: 400; font-size: clamp(3rem, 13vw, 7rem); margin: 0; line-height: 1; }
+.finale h2 span { color: var(--heart); }
+.finale p { margin: 0 auto; max-width: 36ch; font-family: var(--verse); font-style: italic; font-size: 1.35rem; }
+.sign { font-size: .8rem; letter-spacing: .28em; text-transform: uppercase; color: var(--dim); }
+
+/* Odometer */
+.odo {
+  position: fixed; left: 50%; translate: -50% 0; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 5;
+  display: flex; gap: 10px; align-items: center; max-width: calc(100% - 24px);
+  background: var(--glass); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 16px;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-size: .8rem; white-space: nowrap;
+}
+.odo b { color: var(--star); font-weight: 500; font-variant-numeric: tabular-nums; }
+.odo .where { color: var(--dim); overflow: hidden; text-overflow: ellipsis; }
+
+/* Lightbox */
+.lb { position: fixed; inset: 0; z-index: 20; background: rgba(4,5,15,.95); display: grid; grid-template-rows: auto 1fr auto auto;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; font-variant-numeric: tabular-nums; color: var(--dim); font-size: .85rem; }
+.lb-stage { position: relative; display: grid; place-items: center; min-height: 0; padding: 0 8px; touch-action: pan-y; }
+.lb-stage img, .lb-stage video { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 3px; box-shadow: 0 0 60px rgba(244,201,107,.15); }
+.lb-cap { text-align: center; padding: 12px 20px 0; font-family: var(--verse); font-style: italic; font-size: 1.3rem; min-height: 2.6em; }
+.lb-nav { display: flex; justify-content: center; gap: 12px; padding: 12px 16px 18px; }
+.btn { font: 400 .95rem var(--body); color: var(--moon); background: rgba(242,234,216,.08); border: 1px solid var(--rule); border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+.btn:hover { background: rgba(242,234,216,.16); }
+.btn:focus-visible { outline: 2px solid var(--star); outline-offset: 2px; }
+.lb-side { position: absolute; top: 0; bottom: 0; width: 22%; border: 0; background: transparent; cursor: pointer; }
+.lb-side.prev { left: 0; } .lb-side.next { right: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .card, .card:hover { transition: none; }
+  .card.float { animation: none; }
+}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="tint" id="tint" aria-hidden="true"></div>
+
+<main>
+  <section class="hero" id="inicio">
+    <div class="eyebrow">Bitácora de un viaje</div>
+    <h1>Para Lola</h1>
+    <p>Un viaje por el universo, de la Tierra a las estrellas y de vuelta a ti.</p>
+    <a class="go" href="#parada-1">Despegar ✦</a>
+    <nav class="route" id="route" aria-label="Paradas del viaje"></nav>
+  </section>
+
+  <div id="stops"></div>
+
+  <section class="finale" id="final">
+    <div class="eyebrow">Fin del recorrido</div>
+    <h2>Te amo, <span>Lola</span></h2>
+    <p>Recorrimos todo el cielo y la conclusión es la misma: mi lugar favorito del universo eres tú.</p>
+    <div class="sign">Con todo mi amor · Harold</div>
+  </section>
+</main>
+
+<div class="odo" aria-live="off"><span>✦</span><b id="odoNum">0</b><span id="odoUnit">km</span><span class="where" id="odoWhere">· Tierra</span></div>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto en grande">
+  <div class="lb-bar"><span id="lbPos">1 / 1</span><button class="btn" id="lbClose" type="button">Cerrar</button></div>
+  <div class="lb-stage" id="lbStage">
+    <button class="lb-side prev" type="button" aria-label="Anterior" id="sidePrev"></button>
+    <button class="lb-side next" type="button" aria-label="Siguiente" id="sideNext"></button>
+  </div>
+  <div class="lb-cap" id="lbCap"></div>
+  <div class="lb-nav"><button class="btn" id="lbPrev" type="button">← Anterior</button><button class="btn" id="lbNext" type="button">Siguiente →</button></div>
+</div>
+
+<script>
+const STOPS = [
+  { name: 'Polvo de estrellas', coord: 'Órbita baja · 400 km de la Tierra', emblem: 'stars',
+    tint: 'radial-gradient(ellipse at 20% 10%, rgba(80,60,160,.35), transparent 60%)',
+    poem: 'Antes de ti, el cielo era un mapa sin nombres.\nLlegaste tú, Lola, y cada estrella\naprendió a decir tu nombre en voz baja.\nHoy despego contigo:\nno hay gravedad que me sostenga\ncuando me miras.' },
+  { name: 'La Luna', coord: '384.400 km · Mar de la Tranquilidad', emblem: 'moon',
+    tint: 'radial-gradient(circle at 80% 20%, rgba(220,215,200,.16), transparent 55%)',
+    poem: 'La luna me pidió prestada tu risa\npara alumbrar la noche entera.\nLe dije que no:\nesa luz es mía cuando despierto\ny de nadie más cuando te abrazo.' },
+  { name: 'Constelación Lola', coord: 'Ascensión recta 14h 02m · Declinación +14°', emblem: 'const',
+    tint: 'radial-gradient(ellipse at 50% 0%, rgba(120,70,190,.32), transparent 60%)',
+    poem: 'Si unes las pecas de tus mejillas\naparece una constelación nueva.\nLa llamé Lola.\nLos astrónomos todavía no la conocen,\npero yo me la sé de memoria.' },
+  { name: 'El mar de Italia', coord: '41°54′ N · 12°29′ E · Roma, Tirreno', emblem: 'italy',
+    tint: 'linear-gradient(180deg, rgba(220,140,70,.18), rgba(40,110,150,.22))',
+    poem: 'En Roma el helado se derretía más lento,\ncomo si el tiempo quisiera quedarse.\nEntre piedras antiguas y calles de colores\nentendí que lo eterno\nno estaba en los monumentos:\nestaba caminando a mi lado.' },
+  { name: 'Santa Marta', coord: '11°14′ N · 74°12′ O · Caribe colombiano', emblem: 'beach',
+    tint: 'linear-gradient(180deg, rgba(255,120,110,.18), rgba(30,170,170,.24))',
+    poem: 'Donde la Sierra baja a besar el mar,\nel Caribe aprendió tu nombre en cada ola.\nQuiero atardeceres de Santa Marta contigo,\narena tibia, sal en los labios\ny tu mano diciendo: aquí, siempre aquí.' },
+  { name: 'Infinito', coord: 'Andrómeda · 2,5 millones de años luz', emblem: 'heart',
+    tint: 'radial-gradient(ellipse at 50% 60%, rgba(255,110,140,.22), transparent 65%)',
+    poem: 'El universo se expande cada segundo\ny aun así se queda pequeño\npara todo lo que siento por ti.\nLola, mi rincón favorito del cosmos\nes el espacio entre tu hombro y mi mejilla.' }
+];
+const LINES = [
+  'Tu sonrisa tiene su propia órbita.', 'Aquí brillabas más que cualquier estrella.', 'Contigo cualquier noche es noche de luna llena.',
+  'Si me pierdo, sigo tu luz.', 'Una supernova de risas.', 'Esta foto tiene gravedad: no puedo dejar de mirarla.',
+  'Polvo de estrellas con aretes dorados.', 'El cosmos entero cabe en este abrazo.', 'Hasta los cometas se detienen a mirarte.',
+  'Eres mi norte, mi sur y mi cielo.', 'Aterrizaje perfecto en tu mirada.', 'Tu risa: mi frecuencia favorita del universo.',
+  'Hay planetas con menos luz que tú.', 'Aquí el tiempo se volvió eterno.', 'Mi constelación preferida eres tú.',
+  'Un eclipse no me taparía este recuerdo.', 'Que nunca se acaben estos viajes.', 'Brillas sin intentarlo.',
+  'Eres el lugar donde quiero quedarme.', 'Tu nombre suena a marea tranquila.', 'Lola, mi estrella fugaz que sí se quedó.',
+  'Te elegiría en cualquier galaxia.', 'Cada foto contigo es un planeta nuevo.', 'Contigo hasta el silencio brilla.',
+  'Mi cielo tiene tus ojos.', 'Navegando por la Vía Láctea de tu pelo.', 'Gravedad cero, amor infinito.',
+  'Así se ve la felicidad desde aquí arriba.', 'Mi luna, mi mar, mi playa.', 'Te quiero más que estrellas hay en el cielo.'
+];
+const EMBLEMS = {
+  stars: '<svg viewBox="0 0 120 120" class="emblem" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="none" stroke="rgba(244,201,107,.35)"/><g fill="#f4c96b"><path d="M60 20l5 30 30 10-30 10-5 30-5-30-30-10 30-10z"/></g><g fill="#f2ead8"><circle cx="24" cy="30" r="1.6"/><circle cx="96" cy="34" r="2"/><circle cx="92" cy="92" r="1.4"/><circle cx="30" cy="94" r="1.8"/></g></svg>',
+  moon: '<svg viewBox="0 0 120 120" class="emblem" aria-hidden="true"><defs><radialGradient id="mg" cx=".38" cy=".35"><stop offset="0" stop-color="#fbf6ea"/><stop offset="1" stop-color="#b8b0a0"/></radialGradient></defs><circle cx="60" cy="60" r="52" fill="url(#mg)"/><g fill="rgba(110,100,90,.25)"><circle cx="44" cy="46" r="10"/><circle cx="74" cy="72" r="13"/><circle cx="70" cy="36" r="6"/><circle cx="40" cy="80" r="7"/></g></svg>',
+  const: '<svg viewBox="0 0 120 120" class="emblem" aria-hidden="true"><g stroke="rgba(244,201,107,.6)" stroke-width="1"><path d="M18 30L40 52 62 40 84 64 100 46M62 40L58 86 84 64" fill="none"/></g><g fill="#f2ead8"><circle cx="18" cy="30" r="3"/><circle cx="40" cy="52" r="3.5"/><circle cx="62" cy="40" r="4"/><circle cx="84" cy="64" r="3.5"/><circle cx="100" cy="46" r="3"/><circle cx="58" cy="86" r="3"/></g></svg>',
+  italy: '<svg viewBox="0 0 120 120" class="emblem" aria-hidden="true"><circle cx="60" cy="60" r="54" fill="#1d3f5e"/><circle cx="60" cy="48" r="20" fill="#f4a95c"/><path d="M6 66h108v6H6zM10 78h100v5H10zM16 89h88v4H16z" fill="#49c6c9" opacity=".8"/><path d="M30 66V50h6v16M84 66V46h8v20" fill="#f2ead8" opacity=".7"/></svg>',
+  beach: '<svg viewBox="0 0 120 120" class="emblem" aria-hidden="true"><circle cx="60" cy="60" r="54" fill="#2a2150"/><circle cx="66" cy="56" r="18" fill="#ff8f6b"/><path d="M6 68c18-6 36 6 54 0s36-6 54 0v26H6z" fill="#2fb7b5"/><path d="M6 86c20-4 40 4 60 0s34-4 48 0v8H6z" fill="#f2d9a6"/><path d="M30 86c2-18 4-30 2-40M32 46c-8-2-14 2-16 6M32 46c6-6 14-6 18-2M32 46c-2-6-8-10-12-8" stroke="#1a3a2a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>',
+  heart: '<svg viewBox="0 0 120 120" class="emblem" aria-hidden="true"><g stroke="rgba(255,125,143,.65)" fill="none"><path d="M60 98L22 58C10 44 20 22 40 24c10 1 16 8 20 16 4-8 10-15 20-16 20-2 30 20 18 34z"/></g><g fill="#ffd9de"><circle cx="60" cy="40" r="3"/><circle cx="40" cy="24" r="3"/><circle cx="22" cy="58" r="3"/><circle cx="60" cy="98" r="3.4"/><circle cx="98" cy="58" r="3"/><circle cx="80" cy="24" r="3"/></g></svg>'
+};
+const DIST = [400/9.461e12, 384400/9.461e12, 640, 1300, 26000, 2500000];
+
+(async function () {
+  let photos = [];
+  try { photos = await (await fetch('photos.json')).json(); } catch (e) {}
+  const items = [];
+  const stopsEl = document.getElementById('stops'), route = document.getElementById('route');
+  const per = Math.ceil(photos.length / STOPS.length);
+  let li = 0;
+  STOPS.forEach((s, si) => {
+    const a = document.createElement('a'); a.href = '#parada-' + (si + 1); a.textContent = s.name; route.appendChild(a);
+    const sec = document.createElement('section'); sec.className = 'stop'; sec.id = 'parada-' + (si + 1); sec.dataset.i = si;
+    sec.innerHTML = '<div class="stop-head">' + EMBLEMS[s.emblem] + '<div><div class="stop-label">Parada ' + (si + 1) + ' de ' + STOPS.length + '</div><h2></h2><div class="coord"></div></div></div><div class="poem"></div><div class="cards"></div>';
+    sec.querySelector('h2').textContent = s.name;
+    sec.querySelector('.coord').textContent = s.coord;
+    sec.querySelector('.poem').textContent = s.poem;
+    const cards = sec.querySelector('.cards');
+    const group = photos.slice(si * per, (si + 1) * per).map(([n, w, h]) => ({ type: 'img', thumb: 't/' + n, src: 'f/' + n, w, h }));
+    if (si === 0) group.splice(3, 0, { type: 'video', thumb: 'video.jpg', src: 'video.mp4' });
+    group.forEach(it => {
+      it.cap = it.type === 'video' ? 'Dale play: este momento se mueve.' : LINES[li++ % LINES.length];
+      const idx = items.push(it) - 1;
+      const b = document.createElement('button'); b.type = 'button';
+      b.className = 'card float' + (it.type === 'video' ? ' video' : '');
+      b.style.setProperty('--r', ((idx * 37) % 7 - 3) * .8 + 'deg');
+      b.style.setProperty('--d', (6 + (idx % 5)) + 's');
+      b.setAttribute('aria-label', it.type === 'video' ? 'Ver video' : 'Ver foto: ' + it.cap);
+      const im = document.createElement('img'); im.src = it.thumb; im.alt = ''; im.loading = idx < 6 ? 'eager' : 'lazy'; im.decoding = 'async';
+      if (it.w) { im.width = Math.round(it.w / 3); im.height = Math.round(it.h / 3); }
+      const cap = document.createElement('span'); cap.className = 'cap'; cap.textContent = it.cap;
+      b.append(im, cap);
+      if (it.type === 'video') { const p = document.createElement('span'); p.className = 'play'; p.textContent = '▶'; b.appendChild(p); }
+      b.addEventListener('click', () => open(idx));
+      cards.appendChild(b);
+    });
+    stopsEl.appendChild(sec);
+  });
+
+  // Odometer + tint follow the stop in view
+  const odoNum = document.getElementById('odoNum'), odoWhere = document.getElementById('odoWhere'), tint = document.getElementById('tint');
+  const odoUnit = document.getElementById('odoUnit');
+  const fmt = v => { if (v < .001) { odoUnit.textContent = 'km'; return Math.round(v * 9.461e12).toLocaleString('es-CO'); } odoUnit.textContent = 'años luz'; return Math.round(v).toLocaleString('es-CO'); };
+  function onScroll() {
+    const secs = [...document.querySelectorAll('.stop')];
+    const mid = innerHeight * .45;
+    let cur = -1;
+    secs.forEach((s, i) => { if (s.getBoundingClientRect().top < mid) cur = i; });
+    if (cur < 0) { odoNum.textContent = '0'; odoUnit.textContent = 'km'; odoWhere.textContent = '· Tierra'; tint.style.background = 'none'; return; }
+    const s = secs[cur], r = s.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (mid - r.top) / r.height));
+    const from = cur ? DIST[cur - 1] : 0, to = DIST[cur];
+    odoNum.textContent = fmt(from + (to - from) * f);
+    odoWhere.textContent = '· ' + STOPS[cur].name;
+    tint.style.background = STOPS[cur].tint;
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Lightbox
+  const lb = document.getElementById('lb'), stage = document.getElementById('lbStage'), pos = document.getElementById('lbPos'), capEl = document.getElementById('lbCap');
+  let cur = 0, media = null, lastFocus = null;
+  function show(i) {
+    cur = (i + items.length) % items.length; const it = items[cur];
+    if (media) media.remove();
+    if (it.type === 'video') { media = document.createElement('video'); media.src = it.src; media.controls = true; media.playsInline = true; media.poster = it.thumb; }
+    else {
+      media = document.createElement('img'); media.src = it.src; media.alt = it.cap;
+      [cur + 1, cur - 1].forEach(k => { const n = items[(k + items.length) % items.length]; if (n.type === 'img') { const p = new Image(); p.src = n.src; } });
+    }
+    stage.prepend(media); pos.textContent = (cur + 1) + ' / ' + items.length; capEl.textContent = it.cap;
+  }
+  function open(i) { lastFocus = document.activeElement; lb.hidden = false; document.body.style.overflow = 'hidden'; show(i); document.getElementById('lbClose').focus(); }
+  function close() { if (media && media.pause) media.pause(); lb.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+  document.getElementById('lbClose').onclick = close;
+  document.getElementById('lbPrev').onclick = document.getElementById('sidePrev').onclick = () => show(cur - 1);
+  document.getElementById('lbNext').onclick = document.getElementById('sideNext').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => { if (lb.hidden) return; if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') show(cur + 1); else if (e.key === 'ArrowLeft') show(cur - 1); });
+  let x0 = null;
+  stage.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 45) show(cur + (dx < 0 ? 1 : -1)); });
+})();
+
+// Starfield with twinkle, scroll parallax and the odd shooting star
+(function () {
+  const c = document.getElementById('sky'), x = c.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, stars = [], shoot = null, dpr = Math.min(2, devicePixelRatio || 1);
+  function size() {
+    W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr;
+    const n = Math.round(innerWidth * innerHeight / 2600);
+    stars = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H * 3, r: (Math.random() * 1.3 + .3) * dpr, z: Math.random() * .6 + .2, p: Math.random() * 6.28, gold: Math.random() < .12 }));
+  }
+  size(); addEventListener('resize', size);
+  function frame(t) {
+    x.clearRect(0, 0, W, H);
+    const g = x.createRadialGradient(W * .7, H * .25, 0, W * .7, H * .25, Math.max(W, H) * .8);
+    g.addColorStop(0, 'rgba(60,40,120,.28)'); g.addColorStop(1, 'rgba(6,7,22,0)');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    const sy = scrollY * dpr;
+    for (const s of stars) {
+      const y = ((s.y - sy * s.z * .35) % (H * 3) + H * 3) % (H * 3);
+      if (y > H) continue;
+      const a = still ? .8 : .45 + .55 * Math.sin(t / 900 + s.p);
+      x.globalAlpha = a; x.fillStyle = s.gold ? '#f4c96b' : '#f2ead8';
+      x.beginPath(); x.arc(s.x, y, s.r, 0, 6.283); x.fill();
+    }
+    x.globalAlpha = 1;
+    if (!still) {
+      if (!shoot && Math.random() < .004) shoot = { x: Math.random() * W, y: Math.random() * H * .5, l: 0 };
+      if (shoot) {
+        shoot.l += 14 * dpr;
+        const gr = x.createLinearGradient(shoot.x, shoot.y, shoot.x - shoot.l, shoot.y - shoot.l * .4);
+        gr.addColorStop(0, 'rgba(255,255,255,.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+        x.strokeStyle = gr; x.lineWidth = 1.6 * dpr; x.beginPath(); x.moveTo(shoot.x, shoot.y); x.lineTo(shoot.x - shoot.l, shoot.y - shoot.l * .4); x.stroke();
+        shoot.x += 10 * dpr; shoot.y += 4 * dpr; if (shoot.l > 260 * dpr) shoot = null;
+      }
+      requestAnimationFrame(frame);
+    }
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
